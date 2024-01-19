@@ -1,0 +1,19 @@
+.form{
+    margin:10px;
+    /* background-color: #279EFF; */
+    /* background:linear-gradient(45deg, #FFE17B 75%,white 100%); */
+    /* background-color: #512B81; */
+    background-color: #91C8E4;
+    padding:2% 3%;
+    border: 2px black dashed;
+    border-radius:5px;
+
+}
+.input{
+    margin:30px;
+   
+}
+.control{
+    border:#BA704F 3px solid;
+
+}
