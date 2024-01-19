@@ -4,26 +4,22 @@ import React, { Component } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Offcanvas from "react-bootstrap/Offcanvas";
+
 import "./nav.css";
-import Modal from "react-bootstrap/Modal";
-import { map } from "./Map.js";
-import Intro from "./homeIntro.jsx";
-import Register from "./register.jsx";
+
+import Intro from "../design/homeIntro.jsx";
+//import Register from "./register.jsx";
 import { Route, Routes } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
-import LogStudent from "./logstudent";
-import LogAdmin from "./logadmin";
-import LogSuperAdmin from "./logsuperadmin";
-import CardImage from "./Card";
-import RegisterStudent from "./registerStudent";
-import RegisterAdmin from "./registerAdmin";
-import RegisterSuper from "./registerSuper";
-import StudentPage from "./studentPage";
-import AdminPage from "./AdminPage";
+import LogStudent from "../student/logstudent.jsx";
+import LogAdmin from "../admin/logadmin.jsx";
+
+
+import RegisterStudent from "../student/registerStudent";
+import RegisterAdmin from "../admin/registerAdmin";
+
+import StudentPage from "../student/studentPage";
+import AdminPage from "../admin/AdminPage";
 
 function NavBar() {
   let navigate = useNavigate();
@@ -37,7 +33,7 @@ function NavBar() {
     <div>
       <Navbar collapseOnSelect expand="" className="bg-body-secondary navbar">
         <Container>
-          <img className="navimg" src={require("./bitsindrilogo.jpg")} />
+          <img className="navimg" src={require("../images/bitsindrilogo.jpg")} />
           <Navbar.Brand id="brand">
             BIT Hostels
           </Navbar.Brand>

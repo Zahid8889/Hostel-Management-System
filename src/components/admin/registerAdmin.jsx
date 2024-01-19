@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
-import "./reg.css";
+import "../design/reg.css";
 const RegisterAdmin = () => {
   let navigate = useNavigate();
   const [credentials, setCredentials] = useState({

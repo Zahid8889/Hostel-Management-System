@@ -1,0 +1,23 @@
+.admin{
+    display:grid;
+    grid-template-columns: 35% auto;
+    color:black;
+
+}
+.admin1{
+    background-color:bisque;
+    height: 95vh;
+    text-align:center;
+    margin:2%;
+    padding: 4%;
+}
+button{
+    display:block;
+}
+.navi{
+    color:black !important;
+   width: 25rem;
+    border:1px black solid;
+    margin:5% 0%;
+    
+}

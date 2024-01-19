@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
-import "./tabl.css";
+import "../design/tabl.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 

@@ -2,7 +2,7 @@ import React, { useState, Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import "./reg.css";
+import "../design/reg.css";
 const LogStudent = () => {
   let navigate = useNavigate();
 

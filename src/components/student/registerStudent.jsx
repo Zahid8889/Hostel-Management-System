@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
-import "./reg.css";
+import "../design/reg.css";
 
 
 const RegisterStudent = () => {
@@ -67,7 +67,7 @@ const RegisterStudent = () => {
       <Form className="form" onSubmit={handleSubmit}>
         <h2>Register as Student</h2>
 
-        <Form.Group className="input" controlId="formName">
+        {/* <Form.Group className="input" controlId="formName">
           <Form.Label>Enter Name</Form.Label>
           <Form.Control
             className="control"
@@ -77,7 +77,7 @@ const RegisterStudent = () => {
             value={credentials.name}
             onChange={onChange}
           />
-        </Form.Group>
+        </Form.Group> */}
         <Form.Group className="input" contorlId="formEmail">
           <Form.Label>Enter Email</Form.Label>
           <Form.Control
@@ -86,28 +86,6 @@ const RegisterStudent = () => {
             placeholder="Email"
             name="email"
             value={credentials.email}
-            onChange={onChange}
-          />
-        </Form.Group>
-        <Form.Group className="input" controlId="formPassword">
-          <Form.Label>Create Password</Form.Label>
-          <Form.Control
-           className="control"
-            type="password"
-            placeholder="Create Password"
-            name="password"
-            value={credentials.password}
-            onChange={onChange}
-          />
-        </Form.Group>
-        <Form.Group className="input" controlId="formPassword">
-          <Form.Label>Enter Phone Number</Form.Label>
-          <Form.Control
-           className="control"
-            type="number"
-            placeholder="Enter Phone Number"
-            name="phonumber"
-            value={credentials.phonumber}
             onChange={onChange}
           />
         </Form.Group>
@@ -123,6 +101,29 @@ const RegisterStudent = () => {
           />
         </Form.Group>
         <Form.Group className="input" controlId="formPassword">
+          <Form.Label>Create Password</Form.Label>
+          <Form.Control
+           className="control"
+            type="password"
+            placeholder="Create Password"
+            name="password"
+            value={credentials.password}
+            onChange={onChange}
+          />
+        </Form.Group>
+        {/* <Form.Group className="input" controlId="formPassword">
+          <Form.Label>Enter Phone Number</Form.Label>
+          <Form.Control
+           className="control"
+            type="number"
+            placeholder="Enter Phone Number"
+            name="phonumber"
+            value={credentials.phonumber}
+            onChange={onChange}
+          />
+        </Form.Group> */}
+       
+        {/* <Form.Group className="input" controlId="formPassword">
           <Form.Label>Enter Roll Number</Form.Label>
           <Form.Control
            className="control"
@@ -132,8 +133,8 @@ const RegisterStudent = () => {
             value={credentials.rollnum}
             onChange={onChange}
           />
-        </Form.Group>
-        <Form.Group className="input" controlId="formPassword">
+        </Form.Group> */}
+        {/* <Form.Group className="input" controlId="formPassword">
           <Form.Label>Enter Department</Form.Label>
           <Form.Control
            className="control"
@@ -191,7 +192,7 @@ const RegisterStudent = () => {
             onChange={onChange}
           />
         </Form.Group>
-        
+         */}
 
         <hr />
         <Button type="submit" variant="secondary">
