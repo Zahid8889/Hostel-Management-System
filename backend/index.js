@@ -3,6 +3,7 @@ require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 5000
 const mongoose = require('./db');
+const cookieParser = require('cookie-parser');
 mongoose();
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -13,6 +14,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use(express.json())
+app.use(cookieParser())
 
 app.use('/api', require('./Routes/student.route.js'))
 // app.use('/api', require('./Routes/adminroute'))
