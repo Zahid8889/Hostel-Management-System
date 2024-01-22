@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 5000
+const port = process.env.PORT || 5000
 const mongoose = require('./db');
 mongoose();
 app.use((req, res, next) => {
@@ -12,6 +12,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use(express.json())
+
 app.use('/api', require('./Routes/studentroute'))
 app.use('/api', require('./Routes/adminroute'))
 app.get('/', (req, res) => {
