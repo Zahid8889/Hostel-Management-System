@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const jwt = require('jsonwebtoken')
 const bcryptjs = require('bcryptjs')
-const studentSchema = new Schema(
+const Student = new Schema(
   {
     name: {
       type: String,
@@ -68,7 +68,7 @@ const studentSchema = new Schema(
   }
 );
 
-studentSchema.pre("save", async function (next) {
+Student.pre("save", async function (next) {
   if(!this.isModified("password")) return next();
 
   this.password = await bcryptjs.hash(this.password, 10)
@@ -76,18 +76,17 @@ studentSchema.pre("save", async function (next) {
 })
 
 
-studentSchema.methods.isPasswordCorrect = async function(password){
+Student.methods.isPasswordCorrect = async function(password){
   return await bcryptjs.compare(password, this.password)
 }
 
 
-studentSchema.methods.generateAccessToken = function(){
+Student.methods.generateAccessToken = function(){
   return jwt.sign(
       {
           _id: this._id,
           email: this.email,
-          username: this.username,
-          fullName: this.fullName
+          regnumber: this.regnumber
       },
       process.env.ACCESS_TOKEN_SECRET,
       {
@@ -95,7 +94,7 @@ studentSchema.methods.generateAccessToken = function(){
       }
   )
 }
-userSchema.methods.generateRefreshToken = function(){
+Student.methods.generateRefreshToken = function(){
   return jwt.sign(
       {
           _id: this._id,
@@ -107,4 +106,4 @@ userSchema.methods.generateRefreshToken = function(){
       }
   )
 }
-module.exports = mongoose.model("student", studentSchema);
+module.exports = mongoose.model("student", Student);

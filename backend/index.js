@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 5000
 const mongoose = require('./db');
@@ -8,13 +9,13 @@ app.use((req, res, next) => {
     res.header(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept"
-    );
+    ); 
     next();
 });
 app.use(express.json())
 
-app.use('/api', require('./Routes/studentroute'))
-app.use('/api', require('./Routes/adminroute'))
+app.use('/api', require('./Routes/student.route.js'))
+// app.use('/api', require('./Routes/adminroute'))
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })

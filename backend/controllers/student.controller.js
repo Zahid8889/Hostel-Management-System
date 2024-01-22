@@ -1,14 +1,14 @@
-import { asyncHandler } from "../utils/asynchandler.js";
-import {ApiError} from "../utils/ApiError.js"
-import { student} from "../models/student.model.js"
-import { ApiResponse } from "../utils/ApiResponse.js";
-import jwt from "jsonwebtoken"
-import mongoose from "mongoose";
+const { asyncHandler } = require("../utils/asynchandler.js");
+const {ApiError} = require("../utils/ApiError.js")
+const Student = require("../models/student.model.js")
+const { ApiResponse } = require("../utils/ApiResponse.js")
+const jwt  =require("jsonwebtoken")
+const mongoose = require("mongoose");
 
 
 const generateAccessAndRefereshTokens = async(studentId) =>{
     try {
-        const student = await student.findById(studentId)
+        const student = await Student.findById(studentId)
         const accessToken = student.generateAccessToken()
         const refreshToken = student.generateRefreshToken()
 
@@ -19,6 +19,7 @@ const generateAccessAndRefereshTokens = async(studentId) =>{
 
 
     } catch (error) {
+        console.log(error)
         throw new ApiError(500, "Something went wrong while generating referesh and access token")
     }
 }
@@ -26,7 +27,7 @@ const generateAccessAndRefereshTokens = async(studentId) =>{
 const registerstudent = asyncHandler( async (req, res) => {
     // get student details from frontend
     // validation - not empty
-    // check if student already exists: studentname, email
+    // check if student already exists: name, email
     // check for images, check for avatar
     // upload them to cloudinary, avatar
     // create student object - create entry in db
@@ -35,38 +36,35 @@ const registerstudent = asyncHandler( async (req, res) => {
     // return res
 
 
-    const {fullName, email, studentname, password } = req.body
+    const {name, email, phonumber, password ,regnumber,rollnum,dept,fathername,gender,dob} = req.body
     //console.log("email: ", email);
 
     if (
-        [fullName, email, studentname, password].some((field) => field?.trim() === "")
+        [ regnumber, name, password].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
-
-    const existedstudent = await student.findOne({
-        $or: [{ studentname }, { email }]
+    
+    const existedstudent =    await Student.findOne({
+        regnumber:regnumber 
     })
 
     if (existedstudent) {
-        throw new ApiError(409, "student with email or studentname already exists")
+        throw new ApiError(409, "student with email or name already exists")
     }
-    //console.log(req.files);
+    // //console.log(req.files);
 
     
-    //const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // //const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
     
    
 
-    const student = await student.create({
-        fullName,
-        email, 
-        password,
-        studentname: studentname.toLowerCase()
+    const student = await Student.create({
+        name, email, phonumber, password ,regnumber,rollnum,dept,fathername,gender,dob
     })
 
-    const createdstudent = await student.findById(student._id).select(
+    const createdstudent = await Student.findById(student._id).select(
         "-password -refreshToken"
     )
 
@@ -82,27 +80,27 @@ const registerstudent = asyncHandler( async (req, res) => {
 
 const loginstudent = asyncHandler(async (req, res) =>{
     // req body -> data
-    // studentname or email
+    // name or email
     //find the student
     //password check
     //access and referesh token
     //send cookie
 
-    const {email, studentname, password} = req.body
+    const {email, regnumber, password} = req.body
     console.log(email);
 
-    if (!studentname && !email) {
-        throw new ApiError(400, "studentname or email is required")
+    if (!regnumber && !email) {
+        throw new ApiError(400, "name or email is required")
     }
     
     // Here is an alternative of above code based on logic discussed in video:
-    // if (!(studentname || email)) {
-    //     throw new ApiError(400, "studentname or email is required")
+    // if (!(name || email)) {
+    //     throw new ApiError(400, "regnumber or email is required")
         
     // }
 
-    const student = await student.findOne({
-        $or: [{studentname}, {email}]
+    const student = await Student.findOne({
+        $or: [{regnumber}, {email}]
     })
 
     if (!student) {
@@ -117,7 +115,7 @@ const loginstudent = asyncHandler(async (req, res) =>{
 
    const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(student._id)
 
-    const loggedInstudent = await student.findById(student._id).select("-password -refreshToken")
+    const loggedInstudent = await Student.findById(student._id).select("-password -refreshToken")
 
     const options = {
         httpOnly: true,
@@ -141,7 +139,7 @@ const loginstudent = asyncHandler(async (req, res) =>{
 })
 
 const logoutstudent = asyncHandler(async(req, res) => {
-    await student.findByIdAndUpdate(
+    await Student.findByIdAndUpdate(
         req.student._id,
         {
             $unset: {
@@ -177,7 +175,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             process.env.REFRESH_TOKEN_SECRET
         )
     
-        const student = await student.findById(decodedToken?._id)
+        const student = await Student.findById(decodedToken?._id)
     
         if (!student) {
             throw new ApiError(401, "Invalid refresh token")
@@ -242,7 +240,7 @@ const getCurrentstudent = asyncHandler(async(req, res) => {
     ))
 })
 
-export {
+module.exports = {
     registerstudent,
     loginstudent,
     logoutstudent,

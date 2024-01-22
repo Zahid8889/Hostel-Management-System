@@ -1,21 +1,22 @@
-import { ApiError } from "../utils/ApiError.js";
-import { asyncHandler } from "../utils/asynchandler.js";
-import jwt from "jsonwebtoken"
-import { student } from "../models/student.model.js";
-import { admin } from "../models/admin.hostel.model.js";
+const jwt = require('jsonwebtoken')
+const Student = require("../models/student.model.js")
+const {ApiError} = require("../utils/ApiError.js")
+const {asyncHandler} = require("../utils/asynchandler.js")
+// const { admin } = require("../models/admin.hostel.model.js");
 
-export const verifyJWTstudent = asyncHandler(async(req, _, next) => {
+const verifyJWTstudent = asyncHandler(async(req, _, next) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
+        console.log(req);
+        console.log(token);
         
-        // console.log(token);
         if (!token) {
             throw new ApiError(401, "Unauthorized request")
         }
     
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
     
-        const student = await student.findById(decodedToken?._id).select("-password -refreshToken")
+        const student = await Student.findById(decodedToken?._id).select("-password -refreshToken")
     
         if (!student) {
             
@@ -29,7 +30,7 @@ export const verifyJWTstudent = asyncHandler(async(req, _, next) => {
     }
     
 })
-export const verifyJWTadmin = asyncHandler(async(req, _, next) => {
+ const verifyJWTadmin = asyncHandler(async(req, _, next) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
         
@@ -54,3 +55,4 @@ export const verifyJWTadmin = asyncHandler(async(req, _, next) => {
     }
     
 })
+module.exports = {verifyJWTstudent,verifyJWTadmin}
