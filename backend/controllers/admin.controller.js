@@ -1,19 +1,19 @@
 const { asyncHandler } = require("../utils/asynchandler.js");
 const {ApiError} = require("../utils/ApiError.js")
-const Student = require("../models/student.model.js")
+const Admin = require("../models/admin.model.js")
 const { ApiResponse } = require("../utils/ApiResponse.js")
 const jwt  =require("jsonwebtoken")
 const mongoose = require("mongoose");
 
 
-const generateAccessAndRefereshTokens = async(studentId) =>{
+const generateAccessAndRefereshTokens = async(adminId) =>{
     try {
-        const student = await Student.findById(studentId)
-        const accessToken = student.generateAccessToken()
-        const refreshToken = student.generateRefreshToken()
+        const admin = await Admin.findById(adminId)
+        const accessToken = admin.generateAccessToken()
+        const refreshToken = admin.generateRefreshToken()
 
-        student.refreshToken = refreshToken
-        await student.save({ validateBeforeSave: false })
+        admin.refreshToken = refreshToken
+        await admin.save({ validateBeforeSave: false })
 
         return {accessToken, refreshToken}
 
@@ -24,33 +24,33 @@ const generateAccessAndRefereshTokens = async(studentId) =>{
     }
 }
 
-const registerstudent = asyncHandler( async (req, res) => {
-    // get student details from frontend
+const registeradmin = asyncHandler( async (req, res) => {
+    // get admin details from frontend
     // validation - not empty
-    // check if student already exists: name, email
+    // check if admin already exists: name, email
     // check for images, check for avatar
     // upload them to cloudinary, avatar
-    // create student object - create entry in db
+    // create admin object - create entry in db
     // remove password and refresh token field from response
-    // check for student creation
+    // check for admin creation
     // return res
 
 
-    const {name, email, phonumber, password ,regnumber,rollnum,dept,fathername,gender,dob} = req.body
+    const {name, email, phonumber, password ,employeeno,rollnum,dept,fathername,gender,dob} = req.body
     //console.log("email: ", email);
 
     if (
-        [ regnumber, name, password].some((field) => field?.trim() === "")
+        [ employeeno, name, password].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
     
-    const existedstudent =    await Student.findOne({
-        regnumber:regnumber 
+    const existedadmin =    await Admin.findOne({
+        employeeno:employeeno 
     })
 
-    if (existedstudent) {
-        throw new ApiError(409, "student with email or name already exists")
+    if (existedadmin) {
+        throw new ApiError(409, "admin with email or name already exists")
     }
     // //console.log(req.files);
 
@@ -60,62 +60,62 @@ const registerstudent = asyncHandler( async (req, res) => {
     
    
 
-    const student = await Student.create({
-        name, email, phonumber, password ,regnumber,rollnum,dept,fathername,gender,dob
+    const admin = await Admin.create({
+        name, email, phonumber, password ,employeeno,rollnum,dept,fathername,gender,dob
     })
 
-    const createdstudent = await Student.findById(student._id).select(
+    const createdadmin = await Admin.findById(admin._id).select(
         "-password -refreshToken"
     )
 
-    if (!createdstudent) {
-        throw new ApiError(500, "Something went wrong while registering the student")
+    if (!createdadmin) {
+        throw new ApiError(500, "Something went wrong while registering the admin")
     }
 
     return res.status(201).json(
-        new ApiResponse(200, createdstudent, "student registered Successfully")
+        new ApiResponse(200, createdadmin, "admin registered Successfully")
     )
 
 } )
 
-const loginstudent = asyncHandler(async (req, res) =>{
+const loginadmin = asyncHandler(async (req, res) =>{
     // req body -> data
     // name or email
-    //find the student
+    //find the admin
     //password check
     //access and referesh token
     //send cookie
 
-    const {email, regnumber, password} = req.body
+    const {email, employeeno, password} = req.body
     console.log(email);
 
-    if (!regnumber && !email) {
+    if (!employeeno && !email) {
         throw new ApiError(400, "name or email is required")
     }
     
     // Here is an alternative of above code based on logic discussed in video:
     // if (!(name || email)) {
-    //     throw new ApiError(400, "regnumber or email is required")
+    //     throw new ApiError(400, "employeeno or email is required")
         
     // }
 
-    const student = await Student.findOne({
-        $or: [{regnumber}, {email}]
+    const admin = await Admin.findOne({
+        $or: [{employeeno}, {email}]
     })
 
-    if (!student) {
-        throw new ApiError(404, "student does not exist")
+    if (!admin) {
+        throw new ApiError(404, "admin does not exist")
     }
 
-   const isPasswordValid = await student.isPasswordCorrect(password)
+   const isPasswordValid = await admin.isPasswordCorrect(password)
 
    if (!isPasswordValid) {
-    throw new ApiError(401, "Invalid student credentials")
+    throw new ApiError(401, "Invalid admin credentials")
     }
 
-   const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(student._id)
+   const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(admin._id)
 
-    const loggedInstudent = await Student.findById(student._id).select("-password -refreshToken")
+    const loggedInadmin = await Admin.findById(admin._id).select("-password -refreshToken")
 
     const options = {
         httpOnly: true,
@@ -130,17 +130,17 @@ const loginstudent = asyncHandler(async (req, res) =>{
         new ApiResponse(
             200, 
             {
-                student: loggedInstudent, accessToken, refreshToken
+                admin: loggedInadmin, accessToken, refreshToken
             },
-            "student logged In Successfully"
+            "admin logged In Successfully"
         )
     )
 
 })
 
-const logoutstudent = asyncHandler(async(req, res) => {
-    await Student.findByIdAndUpdate(
-        req.student._id,
+const logoutadmin = asyncHandler(async(req, res) => {
+    await Admin.findByIdAndUpdate(
+        req.admin._id,
         {
             $unset: {
                 refreshToken: 1 // this removes the field from document
@@ -160,7 +160,7 @@ const logoutstudent = asyncHandler(async(req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json(new ApiResponse(200, {}, "student logged Out"))
+    .json(new ApiResponse(200, {}, "admin logged Out"))
 })
 const refreshAccessToken = asyncHandler(async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
@@ -175,13 +175,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             process.env.REFRESH_TOKEN_SECRET
         )
     
-        const student = await Student.findById(decodedToken?._id)
+        const admin = await Admin.findById(decodedToken?._id)
     
-        if (!student) {
+        if (!admin) {
             throw new ApiError(401, "Invalid refresh token")
         }
     
-        if (incomingRefreshToken !== student?.refreshToken) {
+        if (incomingRefreshToken !== admin?.refreshToken) {
             throw new ApiError(401, "Refresh token is expired or used")
             
         }
@@ -191,7 +191,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true
         }
     
-        const {accessToken, newRefreshToken} = await generateAccessAndRefereshTokens(student._id)
+        const {accessToken, newRefreshToken} = await generateAccessAndRefereshTokens(admin._id)
     
         return res
         .status(200)
@@ -215,36 +215,36 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
 
     
 
-    const student = await Student.findById(req.student?._id)
-    const isPasswordCorrect = await student.isPasswordCorrect(oldPassword)
+    const admin = await Admin.findById(req.admin?._id)
+    const isPasswordCorrect = await admin.isPasswordCorrect(oldPassword)
 
     if (!isPasswordCorrect) {
         throw new ApiError(400, "Invalid old password")
     }
 
-    student.password = newPassword
-    await student.save({validateBeforeSave: false})
+    admin.password = newPassword
+    await admin.save({validateBeforeSave: false})
 
     return res
     .status(200)
     .json(new ApiResponse(200, {}, "Password changed successfully"))
 })
 
-const getCurrentstudent = asyncHandler(async(req, res) => {
+const getCurrentadmin = asyncHandler(async(req, res) => {
     return res
     .status(200)
     .json(new ApiResponse(
         200,
-        req.student,
-        "student fetched successfully"
+        req.admin,
+        "admin fetched successfully"
     ))
 })
 
 module.exports = {
-    registerstudent,
-    loginstudent,
-    logoutstudent,
+    registeradmin,
+    loginadmin,
+    logoutadmin,
     refreshAccessToken,
     changeCurrentPassword,
-    getCurrentstudent
+    getCurrentadmin
 }

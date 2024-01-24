@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const Student = require("../models/student.model.js")
+const Admin = require("../models/admin.model.js")
 const {ApiError} = require("../utils/ApiError.js")
 const {asyncHandler} = require("../utils/asynchandler.js")
 // const { admin } = require("../models/admin.hostel.model.js");
@@ -41,7 +42,7 @@ const verifyJWTstudent = asyncHandler(async(req, _, next) => {
     
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
     
-        const admin = await admin.findById(decodedToken?._id).select("-password -refreshToken")
+        const admin = await Admin.findById(decodedToken?._id).select("-password -refreshToken")
     
         if (!admin) {
             

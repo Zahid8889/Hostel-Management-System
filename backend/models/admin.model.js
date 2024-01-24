@@ -6,6 +6,12 @@ const bcryptjs = require('bcryptjs')
 
 const adminSchema = new Schema(
   {
+    employeeno: {
+      type: Number,
+      index:true,
+      required: true,
+      unique: true,
+    },
     name: {
       type: String,
       trim: true,

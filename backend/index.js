@@ -17,6 +17,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/api', require('./Routes/student.route.js'))
+app.use('/api', require('./Routes/admin.route.js'))
 // app.use('/api', require('./Routes/adminroute'))
 app.get('/', (req, res) => {
     res.send('Hello World!')
