@@ -1,29 +1,32 @@
 const mongoose = require("mongoose");
 
-const { Schema } = mongoose.Schema;
+const { Schema } = mongoose;
 
 const roomSchema = new Schema(
     {
-        hostelno: {
+        hostelid: {
             type: Schema.Types.ObjectId,
             required: true,
-            ref: "hostel"
+            ref: "hostel",
+            index: true,
 
         },
-        student: {
-            type: Schema.Types.ObjectId,
+        roomNumber: {
+            type: Number,
             required: true,
-            ref: "student"
-
+            index: true,
+        },
+        capacity: {
+            type: Number,
+            required: true
         }
-        , admin: {
-            type: Schema.Types.ObjectId,
-            required: true,
-            ref: "admin"
-        },
-    },
+
+    }
+    ,
     {
         timestamps: true,
     }
 );
+roomSchema.index({ hostelid: 1, roomNumber: 1 }, { unique: true });
+
 module.exports = mongoose.model('room', roomSchema)

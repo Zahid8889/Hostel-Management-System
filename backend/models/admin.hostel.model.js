@@ -13,16 +13,8 @@ const adminAllotted = new Schema(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "admin"
-    },
-    total_rooms: {
-      type: Number,
-      required: true,
     }
-    ,
-    student_per_room: {
-      type: Number,
-      required: true,
-    }
+    
   },
   {
     timestamps: true,
