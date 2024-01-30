@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { Schema } = mongoose.Schema;
+const { Schema } = mongoose;
 
 const roomOccupiedSchema = new Schema(
   {
@@ -9,7 +9,7 @@ const roomOccupiedSchema = new Schema(
       ref: "hostel",
       required:true,
     },
-    student:{
+    studentid:{
       type:Schema.Types.ObjectId,
       ref: "student",
       required:true,

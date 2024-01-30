@@ -1,8 +1,32 @@
 import React, { Component } from 'react';
 import { Table } from 'react-bootstrap';
-const studentApplied = () => {
+import { useState,useEffect } from 'react';
+import './studenthostel.css';
+const StudentApplied = () => {
+    const [studentData, setstudentData] = useState([]);
+
+  const fetchAdmin = async () => {
+    const branch = localStorage.getItem("branch");
+    const session = localStorage.getItem("session");
+    await fetch("http://localhost:5000/api/adminpage/fetchapplication", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ branch:branch, session:session }),
+    }).then(async (res) => {
+      
+      let response = await res.json();
+      console.log(response);
+    //   await setstudentData(response.data.getstudents);
+      // await setstudentData(response[1]);
+    });
+  };
+  useEffect(() => {
+    fetchAdmin();
+  }, []);
     return ( <>
-         {studentapplied.length!==0?(
+         {studentData.length!==0?(
       <Table striped bordered className="table-info">
         <thead className="table-dark">
           <tr>
@@ -14,7 +38,7 @@ const studentApplied = () => {
           </tr>
         </thead>
         <tbody>
-          {studentapplied.map((student) => (
+          {studentData.map((student) => (
             <tr>
               <td>{student.regnumber}</td>
               <td>{student.name}</td>
@@ -22,7 +46,7 @@ const studentApplied = () => {
               <td>
                 <button
                   className="btn btn-success btn-sm"
-                  onClick={() => handleAccept(student.regnumber)}
+                //   onClick={() => handleAccept(student.regnumber)}
                 >
                   Accept
                 </button>
@@ -31,7 +55,7 @@ const studentApplied = () => {
                 <button
                   data-value="apply clicked"
                   className="btn btn-danger btn-sm"
-                  onClick={() => handleReject(student.regnumber)}
+                //   onClick={() => handleReject(student.regnumber)}
                 >
                   Reject
                 </button>
@@ -41,9 +65,9 @@ const studentApplied = () => {
         </tbody>
       </Table>
       ):<>
-        
+        <h2 id="datanotfound">No Data Found</h2>
       </>}
     </> );
 }
  
-export default studentApplied;
+export default StudentApplied;

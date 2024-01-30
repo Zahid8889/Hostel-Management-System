@@ -10,13 +10,12 @@ import Admin from './components/admin/admin.jsx';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {/* <BrowserRouter>
-   <NavBar/>
-   </BrowserRouter>
-  
-   <Footer /> */}
+    
    <BrowserRouter>
-   <Admin />
+   <NavBar/>
+   
+
+   <Footer /> 
    </BrowserRouter>
    
   </React.StrictMode>

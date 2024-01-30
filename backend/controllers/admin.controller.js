@@ -1,6 +1,9 @@
 const { asyncHandler } = require("../utils/asynchandler.js");
 const {ApiError} = require("../utils/ApiError.js")
 const Admin = require("../models/admin.model.js")
+const RoomsAllotted = require("../models/room.occupied.model.js")
+// const Hostel = require("../models/hostel.model.js")
+const AdminHostel = require("../models/admin.hostel.model.js")
 const { ApiResponse } = require("../utils/ApiResponse.js")
 const jwt  =require("jsonwebtoken")
 const mongoose = require("mongoose");
@@ -231,14 +234,106 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
 })
 
 const getCurrentadmin = asyncHandler(async(req, res) => {
-    return res
-    .status(200)
-    .json(new ApiResponse(
-        200,
-        req.admin,
-        "admin fetched successfully"
-    ))
+    const {email} = req.body
+    if (!email) {
+        const apiError = new ApiError(404,"Email must be provided");
+        return res.status(apiError.statusCode).json(apiError);
+    }
+
+    try {
+        // Fetch admin based on the provided email
+        const currentAdmin = await Admin.findOne({ email });
+
+        // Check if admin is found
+        if (!currentAdmin) {
+            throw new ApiError(404,"Admin not found");
+        }
+
+        // Respond with the fetched admin data using ApiResponse class
+        const response = new ApiResponse(200, { currentAdmin }, "Admin fetched successfully");
+        // console.log(response)
+        res.status(response.statusCode).json(response);
+    } catch (error) {
+        // Handle any errors that may occur during the fetch process
+        if (error instanceof ApiError) {
+            return res.status(error.statusCode).json(error);
+        } else {
+            // Generic error handling
+            const apiError = new ApiError(500,"Internal Server Error");
+            return res.status(apiError.statusCode).json(apiError);
+        }
+    }
 })
+// async function insertAdminAllotted() {
+//     try {
+//         // Find admin id based on email
+//         const admin = await Admin.findOne({ email: "abc@gmail.com" });
+//         if (!admin) {
+//             console.error("Admin not found");
+//             return;
+//         }
+
+//         // Find hostel id based on hostel number
+//         const hostel = await Hostel.findOne({ hostelno: 4 });
+//         if (!hostel) {
+//             console.error("Hostel not found");
+//             return;
+//         }
+
+//         // Insert a document into adminAllotted
+//         const newAdminAllotted = new AdminHostel({
+//             adminid: admin._id,
+//             hostelid: hostel._id,
+//         });
+
+//         await newAdminAllotted.save();
+
+//         console.log("Admin Allotted document inserted successfully");
+//     } catch (error) {
+//         console.error("Error inserting document:", error.message);
+//     }
+// }
+const getstudents = asyncHandler(async(req,res)=>{
+    const {email} = req.body;
+    // insertAdminAllotted()
+    try {
+        // Check if email is provided
+        if (!email) {
+            throw new ApiError(400, "Email must be provided");
+        }
+
+        // Fetch admin based on the provided email
+        const admin = await Admin.findOne({ email });
+        if (!admin) {
+            throw new ApiError(404, "Admin not found");
+        }
+
+        // Fetch adminHostel based on admin id
+        const adminHostel = await AdminHostel.findOne({ adminid: admin._id });
+        if (!adminHostel) {
+            console.log("j")
+            throw new ApiError(404, "Admin's hostel not found");
+        }
+
+        // Fetch students in the hostel based on adminHostel
+        const students = await RoomsAllotted.find({ hostelid: adminHostel.hostelid }).populate("studentid");
+
+        // Respond with the fetched students data using ApiResponse class
+        const response = new ApiResponse(200, { students }, "Students fetched successfully");
+        res.status(response.statusCode).json(response);
+    } catch (error) {
+        // Handle any errors that may occur during the fetch process
+        if (error instanceof ApiError) {
+            return res.status(error.statusCode).json(error);
+        } else {
+            // Generic error handling
+            const apiError = new ApiError(500, "Internal Server Error");
+            console.log(error)
+            return res.status(apiError.statusCode).json(apiError);
+        }
+    }
+})
+
 
 module.exports = {
     registeradmin,
@@ -246,5 +341,5 @@ module.exports = {
     logoutadmin,
     refreshAccessToken,
     changeCurrentPassword,
-    getCurrentadmin
+    getCurrentadmin,getstudents
 }

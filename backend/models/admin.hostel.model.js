@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
-const { Schema } = mongoose.Schema;
+const { Schema } = mongoose;
 
 const adminAllotted = new Schema(
   {
-    hostelno: {
+    hostelid: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "hostel"
     },
-    admin: {
+    adminid: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "admin"
