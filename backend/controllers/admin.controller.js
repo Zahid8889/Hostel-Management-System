@@ -95,12 +95,6 @@ const loginadmin = asyncHandler(async (req, res) =>{
     if (!employeeno && !email) {
         throw new ApiError(400, "name or email is required")
     }
-    
-    // Here is an alternative of above code based on logic discussed in video:
-    // if (!(name || email)) {
-    //     throw new ApiError(400, "employeeno or email is required")
-        
-    // }
 
     const admin = await Admin.findOne({
         $or: [{employeeno}, {email}]
@@ -111,7 +105,6 @@ const loginadmin = asyncHandler(async (req, res) =>{
     }
 
    const isPasswordValid = await admin.isPasswordCorrect(password)
-
    if (!isPasswordValid) {
     throw new ApiError(401, "Invalid admin credentials")
     }
@@ -124,7 +117,6 @@ const loginadmin = asyncHandler(async (req, res) =>{
         httpOnly: true,
         secure: true
     }
-
     return res
     .status(200)
     .cookie("accessToken", accessToken, options)

@@ -15,19 +15,25 @@ export default function StudentPage() {
     setShowForm(!showForm);
   };
   const [credentials, setCredentials] = useState({
-    name: "",
-    email: "",
-    phonumber: "",
+    // name: "",
+    // email: "",
+    // phonumber: "",
     regnumber: "",
-    rollnum: "",
-    dept: "",
-    fathername: "",
-    mothername: "",
-    gender: "",
-    roomno: "",
-    semester: "",
-    dob: "",
-    hostelno: ""
+    // rollnum: "",
+    // dept: "",
+    // fathername: "",
+    // mothername: "",
+    // gender: "",
+    // roomno: "",
+    // semester: "",
+    // dob: "",
+    hostelno: "",
+    utrno1:"",
+    utrno2:"",
+    branch:"",
+    dateoftransaction:"",
+    session:""
+
   });
   const onChange = (event) => {
     setCredentials({
@@ -38,25 +44,29 @@ export default function StudentPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log(JSON.stringify({ designation: credentials.designation, name: credentials.name, email: credentials.email, password: credentials.password }))
-    const response = await fetch("http://localhost:5000/api/studentapply", {
+    const response = await fetch("http://localhost:5000/api/postapplication", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: credentials.name,
-        email: credentials.email,
-        phonumber: credentials.phonumber,
-        regnumber: credentials.regnumber,
-        rollnum: credentials.rollnum,
-        dept: credentials.dept,
-        fathername: credentials.fathername,
-        mothername: credentials.mothername,
-        gender: credentials.gender,
-        roomno: credentials.roomno,
-        semester: credentials.semester,
-        dob: credentials.dob,
-        hostelno: credentials.hostelno
+        // name: credentials.name,
+        // email: credentials.email,
+        // phonumber: credentials.phonumber,
+        regnumber: studentData.regnumber,
+        // rollnum: credentials.rollnum,
+        branch: studentData.dept,
+        // fathername: credentials.fathername,
+        // mothername: credentials.mothername,
+        // gender: credentials.gender,
+        // roomno: credentials.roomno,
+        // semester: credentials.semester,
+        // dob: credentials.dob,
+        hostelno: credentials.hostelno,
+        utrno1:credentials.utrno1,
+        utrno2:credentials.utrno2,
+        session:credentials.session,
+        dateoftransaction:credentials.dateoftransaction
       }),
     });
     const json = await response.json();
@@ -72,23 +82,23 @@ export default function StudentPage() {
     }
   };
 
-  const fetchHostel = async () => {
-  const email = localStorage.getItem("userEmail");
-    await fetch("http://localhost:5000/api/studenthostel", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email }),
-    }).then(async (res) => {
-      let response = await res.json();
-      await setstudentHostel(response);
-      console.log(response,"successful student details");
-    });
-  };
-  useEffect(() => {
-    fetchHostel();
-  }, []);
+  // const fetchHostel = async () => {
+  // const email = localStorage.getItem("userEmail");
+  //   await fetch("http://localhost:5000/api/studentpage", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ email: email }),
+  //   }).then(async (res) => {
+  //     let response = await res.json();
+  //     await setstudentHostel(response);
+  //     console.log(response,"successful student details");
+  //   });
+  // };
+  // useEffect(() => {
+  //   fetchHostel();
+  // }, []);
   
   
   const [studentData, setstudentData] = useState({});
@@ -102,7 +112,8 @@ export default function StudentPage() {
       body: JSON.stringify({ email: email }),
     }).then(async (res) => {
       let response = await res.json();
-      await setstudentData(response);
+      console.log(response)
+      await setstudentData(response.data.currentStudent);
     });
   };
   useEffect(() => {
@@ -193,7 +204,7 @@ export default function StudentPage() {
       </tbody>
     </Table>
      
-    <div>
+    {/* <div>
       <div className='text-center m-4'>
       <button className="btn btn-lg btn-secondary btn-center" onClick={handleButtonClick}>Show Form</button>
       </div>
@@ -210,7 +221,7 @@ export default function StudentPage() {
             value={credentials.name}
             onChange={onChange}
           />
-        </Form.Group>
+        </Form.Group> */}
         {/* <Form.Group className="input" contorlId="formEmail">
           <Form.Label>Enter Email</Form.Label>
           <Form.Control
@@ -222,7 +233,7 @@ export default function StudentPage() {
           />
         </Form.Group> */}
         
-        <Form.Group className="input" controlId="formPassword">
+        {/* <Form.Group className="input" controlId="formPassword">
           <Form.Label>Enter Phone Number</Form.Label>
           <Form.Control
             type="number"
@@ -231,7 +242,7 @@ export default function StudentPage() {
             value={credentials.phonumber}
             onChange={onChange}
           />
-        </Form.Group>
+        </Form.Group> */}
         {/* <Form.Group className="input" controlId="formPassword">
           <Form.Label>Enter Registration Number</Form.Label>
           <Form.Control
@@ -242,7 +253,7 @@ export default function StudentPage() {
             onChange={onChange}
           />
         </Form.Group> */}
-        <Form.Group className="input" controlId="formPassword">
+        {/* <Form.Group className="input" controlId="formPassword">
           <Form.Label>Enter Roll Number</Form.Label>
           <Form.Control
             type="number"
@@ -291,7 +302,7 @@ export default function StudentPage() {
             value={credentials.gender}
             onChange={onChange}
           />
-        </Form.Group>
+        </Form.Group> */}
         {/* <Form.Group className="input" controlId="formPassword">
           <Form.Label>Enter Room Number</Form.Label>
           <Form.Control
@@ -302,7 +313,7 @@ export default function StudentPage() {
             onChange={onChange}
           />
         </Form.Group> */}
-        <Form.Group className="input" controlId="formPassword">
+        {/* <Form.Group className="input" controlId="formPassword">
           <Form.Label>Enter Semester</Form.Label>
           <Form.Control
             type="number"
@@ -322,7 +333,7 @@ export default function StudentPage() {
             value={credentials.dob}
             onChange={onChange}
           />
-        </Form.Group>
+        </Form.Group> */}
         {/* <Form.Group className="input" controlId="formPassword">
           <Form.Label>Enter Hostel No.</Form.Label>
           <Form.Control
@@ -333,13 +344,13 @@ export default function StudentPage() {
             onChange={onChange}
           />
         </Form.Group> */}
-        <hr />
+        {/* <hr />
         <Button type="submit" variant="secondary">
           Submit
         </Button>
       </Form>
       )}
-    </div>
+    </div> */}
 
     <div>
       <div className='text-center m-4'>
@@ -471,7 +482,7 @@ export default function StudentPage() {
             onChange={onChange}
           />
         </Form.Group> */}
-        <Form.Group className="input" controlId="formPassword">
+        <Form.Group className="input" controlId="formHostelNo">
           <Form.Label>Enter Hostel No.</Form.Label>
           <Form.Control
             type="number"
@@ -481,13 +492,43 @@ export default function StudentPage() {
             onChange={onChange}
           />
         </Form.Group>
-        <Form.Group className="input" controlId="formPassword">
-          <Form.Label>Enter UTR No.</Form.Label>
+        <Form.Group className="input" controlId="formUTR1">
+          <Form.Label>Enter UTR No. 1</Form.Label>
           <Form.Control
-            type="number"
-            placeholder="Enter UTR Number"
-            name="hostelno"
-            value={credentials.hostelno}
+            type="text"
+            placeholder="Enter UTR Number 1"
+            name="utrno1"
+            value={credentials.utrno1}
+            onChange={onChange}
+          />
+        </Form.Group>
+        <Form.Group className="input" controlId="formUTR2">
+          <Form.Label>Enter UTR No. 2</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter UTR Number 2"
+            name="utrno2"
+            value={credentials.utrno2}
+            onChange={onChange}
+          />
+        </Form.Group>
+        <Form.Group className="input" controlId="formSession">
+          <Form.Label>Enter Session</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter Session"
+            name="session"
+            value={credentials.session}
+            onChange={onChange}
+          />
+        </Form.Group>
+        <Form.Group className="input" controlId="formDateOfTransaction">
+          <Form.Label>Enter Date of Transaction</Form.Label>
+          <Form.Control
+            type="date"
+            placeholder="Enter Date of Transaction"
+            name="dateoftransaction"
+            value={credentials.dateoftransaction}
             onChange={onChange}
           />
         </Form.Group>

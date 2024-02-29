@@ -38,7 +38,7 @@ const Admin = () => {
     <div className='admin'> 
     <div className='admin1'>
         <h2>BIT Sindri</h2>
-        <h3>Hostel  No. X</h3>  
+        <h3>Hostel  No. {adminData.hostelno}</h3>  
         <Link className="btn btn-lg  navi" to="/adminpage/admindetails">
               Details
         </Link>

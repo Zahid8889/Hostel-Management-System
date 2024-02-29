@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table } from 'react-bootstrap';
 import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './admin.css';
 const AdminDetails = () => {
     let navigate = useNavigate();
   const [adminData, setadminData] = useState([]);

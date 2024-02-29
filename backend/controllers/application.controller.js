@@ -64,8 +64,8 @@ const open_application = asyncHandler(async (req, res) => {
 });
 
 const fetchApplicationform = asyncHandler(async(req,res)=>{
-    const { branch, session } = req.body;
-
+    const { branch, session } = req.student;
+    console.log(branch,session)
     // Check if branch and session are provided
     if (!branch || !session) {
         const apiError = new ApiError(400,"Branch and session must be provided");

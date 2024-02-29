@@ -139,6 +139,7 @@ const loginstudent = asyncHandler(async (req, res) =>{
 })
 
 const logoutstudent = asyncHandler(async(req, res) => {
+    console.log(req.student)
     await Student.findByIdAndUpdate(
         req.student._id,
         {
@@ -230,6 +231,15 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
     .json(new ApiResponse(200, {}, "Password changed successfully"))
 })
 
+// const getCurrentstudent = asyncHandler(async(req, res) => {
+//     return res
+//     .status(200)
+//     .json(new ApiResponse(
+//         200,
+//         req.student,
+//         "student fetched successfully"
+//     ))
+// })
 const getCurrentstudent = asyncHandler(async(req, res) => {
     return res
     .status(200)
@@ -238,6 +248,35 @@ const getCurrentstudent = asyncHandler(async(req, res) => {
         req.student,
         "student fetched successfully"
     ))
+    // const {email} = req.body
+    // if (!email) {
+    //     const apiError = new ApiError(404,"Email must be provided");
+    //     return res.status(apiError.statusCode).json(apiError);
+    // }
+
+    // try {
+    //     // Fetch admin based on the provided email
+    //     const currentStudent = await Student.findOne({ email });
+
+    //     // Check if admin is found
+    //     if (!currentStudent) {
+    //         throw new ApiError(404,"Student not found");
+    //     }
+
+    //     // Respond with the fetched admin data using ApiResponse class
+    //     const response = new ApiResponse(200, { currentStudent}, "Student fetched successfully");
+    //     // console.log(response)
+    //     res.status(response.statusCode).json(response);
+    // } catch (error) {
+    //     // Handle any errors that may occur during the fetch process
+    //     if (error instanceof ApiError) {
+    //         return res.status(error.statusCode).json(error);
+    //     } else {
+    //         // Generic error handling
+    //         const apiError = new ApiError(500,"Internal Server Error");
+    //         return res.status(apiError.statusCode).json(apiError);
+    //     }
+    // }
 })
 
 module.exports = {
