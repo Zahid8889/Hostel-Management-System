@@ -14,7 +14,7 @@ router.route("/studentpage").post(verifyJWTstudent,getCurrentstudent)
 
 router.route("/getapplication").post(verifyJWTstudent,fetchApplicationform)
 
-router.route("/postapplication").post(addRecievedApplication)
+router.route("/postapplication").post(verifyJWTstudent,addRecievedApplication)
 
 
 

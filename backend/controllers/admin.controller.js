@@ -119,8 +119,8 @@ const loginadmin = asyncHandler(async (req, res) =>{
     }
     return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessTokenAdmin", accessToken, options)
+    .cookie("refreshTokenAdmin", refreshToken, options)
     .json(
         new ApiResponse(
             200, 
@@ -153,12 +153,12 @@ const logoutadmin = asyncHandler(async(req, res) => {
 
     return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .clearCookie("accessTokenAdmin", options)
+    .clearCookie("refreshTokenAdmin", options)
     .json(new ApiResponse(200, {}, "admin logged Out"))
 })
 const refreshAccessToken = asyncHandler(async (req, res) => {
-    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+    const incomingRefreshToken = req.cookies.refreshTokenadmin || req.body.refreshTokenAdmin
 
     if (!incomingRefreshToken) {
         throw new ApiError(401, "unauthorized request")
@@ -190,12 +190,12 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     
         return res
         .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", newRefreshToken, options)
+        .cookie("accessTokenAdmin", accessToken, options)
+        .cookie("refreshTokenAdmin", newRefreshToken, options)
         .json(
             new ApiResponse(
                 200, 
-                {accessToken, refreshToken: newRefreshToken},
+                {"accessTokenAdmin":accessToken, refreshTokenAdmin: newRefreshToken},
                 "Access token refreshed"
             )
         )
@@ -226,35 +226,13 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
 })
 
 const getCurrentadmin = asyncHandler(async(req, res) => {
-    const {email} = req.body
-    if (!email) {
-        const apiError = new ApiError(404,"Email must be provided");
-        return res.status(apiError.statusCode).json(apiError);
-    }
-
-    try {
-        // Fetch admin based on the provided email
-        const currentAdmin = await Admin.findOne({ email });
-
-        // Check if admin is found
-        if (!currentAdmin) {
-            throw new ApiError(404,"Admin not found");
-        }
-
-        // Respond with the fetched admin data using ApiResponse class
-        const response = new ApiResponse(200, { currentAdmin }, "Admin fetched successfully");
-        // console.log(response)
-        res.status(response.statusCode).json(response);
-    } catch (error) {
-        // Handle any errors that may occur during the fetch process
-        if (error instanceof ApiError) {
-            return res.status(error.statusCode).json(error);
-        } else {
-            // Generic error handling
-            const apiError = new ApiError(500,"Internal Server Error");
-            return res.status(apiError.statusCode).json(apiError);
-        }
-    }
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200,
+        req.admin,
+        "admin fetched successfully"
+    ))
 })
 // async function insertAdminAllotted() {
 //     try {

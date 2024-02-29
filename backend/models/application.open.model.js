@@ -14,7 +14,7 @@ const openApplication = new Schema(
       required: true,
       ref: "admin"
     },
-    branch:{
+    dept:{
         type:String,
         required:true,
     },

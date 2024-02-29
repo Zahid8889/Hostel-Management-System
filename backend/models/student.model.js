@@ -44,6 +44,11 @@ const Student = new Schema(
       trim: true, 
       required: true
     },
+    session: {
+      type: String,
+      trim: true, 
+      required: true
+    },
     fathername: {
       type: String,
       trim: true, 

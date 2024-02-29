@@ -9,9 +9,9 @@ const Student = require("../models/student.model.js");
 
 const open_application = asyncHandler(async (req, res) => {
     // Assuming you're receiving data through the request body. Adjust accordingly.
-    const { hostelno, adminemail, branch, session, endDate } = req.body;
+    const { hostelno, adminemail, dept, session, endDate } = req.body;
 
-    if (!hostelno || !adminemail || !branch || !session || !endDate) {
+    if (!hostelno || !adminemail || !dept || !session || !endDate) {
         // const apiError = new ApiError(400,"All fields must be filled");
         // console.log(apiError)
         throw new ApiError(400,"All fields must be filled");
@@ -35,7 +35,7 @@ const open_application = asyncHandler(async (req, res) => {
         const newOpenApplication = new OpenApplication({
             hostelid: hostel._id,
             adminid: adminUser._id,
-            branch,
+            dept,
             session,
             endDate,
         });
@@ -64,17 +64,18 @@ const open_application = asyncHandler(async (req, res) => {
 });
 
 const fetchApplicationform = asyncHandler(async(req,res)=>{
-    const { branch, session } = req.student;
-    console.log(branch,session)
-    // Check if branch and session are provided
-    if (!branch || !session) {
-        const apiError = new ApiError(400,"Branch and session must be provided");
+    const { dept,gender, session } = req.student;
+    console.log(dept,session,req.student)
+    // Check if dept and session are provided
+    if (!dept || !session) {
+        // throw new ApiError(400,"dept and session must be provided");
+        const apiError = new ApiError(400,"dept and session must be provided");
         return res.status(apiError.statusCode).json(apiError);
     }
 
     try {
-        // Fetch open applications based on branch and session
-        const openApplications = await OpenApplication.find({ branch, session });
+        // Fetch open applications based on dept and session
+        const openApplications = await OpenApplication.find({ dept,gender, session });
 
         // Respond with the fetched data using ApiResponse class
         const response = new ApiResponse(200, { openApplications }, "Open applications fetched successfully");
@@ -85,11 +86,14 @@ const fetchApplicationform = asyncHandler(async(req,res)=>{
         return res.status(apiError.statusCode).json(apiError);
     }
 })
+
+
+
 const addRecievedApplication = asyncHandler(async (req, res) => {
-    const { hostelno, regnumber, utrno1, utrno2, branch, dateoftransaction, session } = req.body;
+    const { hostelno, regnumber, utrno1, utrno2, dept, dateoftransaction, session } = req.body;
 
     // Check if any field is empty
-    if (!hostelno || !regnumber || !utrno1 || !utrno2 || !branch || !dateoftransaction || !session) {
+    if (!hostelno || !regnumber || !utrno1 || !utrno2 || !dept || !dateoftransaction || !session) {
         const apiError = new ApiError(400,"All fields must be filled");
         return res.status(apiError.statusCode).json(apiError);
     }
@@ -113,7 +117,7 @@ const addRecievedApplication = asyncHandler(async (req, res) => {
             studentid: student._id,
             utrno1,
             utrno2,
-            branch,
+            dept,
             dateoftransaction,
             session,
         });

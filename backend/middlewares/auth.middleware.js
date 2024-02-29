@@ -7,7 +7,7 @@ const {asyncHandler} = require("../utils/asynchandler.js")
 
 const verifyJWTstudent = asyncHandler(async(req, _, next) => {
     try {
-        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "") 
+        const token = req.cookies?.accessTokenStudent || req.header("Authorization")?.replace("Bearer ", "") 
         // console.log(req.header("cookie"));
         // console.log(token);
         

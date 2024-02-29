@@ -9,8 +9,10 @@ const {verifyJWTadmin} = require("../middlewares/auth.middleware.js");
 
 router.route("/adminreg").post(registeradmin)
 router.route("/adminlogin").post(loginadmin)
-router.route("/adminpage").post(getCurrentadmin)
-router.route("/getstudents").post(getstudents)
+router.route("/adminpage").post(verifyJWTadmin,getCurrentadmin)
+
+router.route("/getstudents").post(verifyJWTadmin,getstudents)
+
 router.route("/adminpage/getstudents").post(getstudents)
 router.route("/adminpage/admindetails").post(getCurrentadmin)
 router.route("/adminlogout").post(verifyJWTadmin,logoutadmin)

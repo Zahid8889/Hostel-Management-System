@@ -36,7 +36,7 @@ const registerstudent = asyncHandler( async (req, res) => {
     // return res
 
 
-    const {name, email, phonumber, password ,regnumber,rollnum,dept,fathername,gender,dob} = req.body
+    const {name, email, phonumber, password ,regnumber,rollnum,session,dept,fathername,gender,dob} = req.body
     //console.log("email: ", email);
 
     if (
@@ -61,7 +61,7 @@ const registerstudent = asyncHandler( async (req, res) => {
    
 
     const student = await Student.create({
-        name, email, phonumber, password ,regnumber,rollnum,dept,fathername,gender,dob
+        name, email, phonumber, password ,regnumber,rollnum,dept,session,fathername,gender,dob
     })
 
     const createdstudent = await Student.findById(student._id).select(
@@ -124,8 +124,8 @@ const loginstudent = asyncHandler(async (req, res) =>{
 
     return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessTokenStudent", accessToken, options)
+    .cookie("refreshTokenStudent", refreshToken, options)
     .json(
         new ApiResponse(
             200, 
@@ -159,8 +159,8 @@ const logoutstudent = asyncHandler(async(req, res) => {
 
     return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .clearCookie("accessTokenStudent", options)
+    .clearCookie("refreshTokenStudent", options)
     .json(new ApiResponse(200, {}, "student logged Out"))
 })
 const refreshAccessToken = asyncHandler(async (req, res) => {
@@ -196,8 +196,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     
         return res
         .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", newRefreshToken, options)
+        .cookie("accessTokenStudent", accessToken, options)
+        .cookie("refreshTokenStudent", newRefreshToken, options)
         .json(
             new ApiResponse(
                 200, 
