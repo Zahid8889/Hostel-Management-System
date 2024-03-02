@@ -7,11 +7,13 @@ const adminAllotted = new Schema(
     hostelid: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "hostel"
+      ref: "hostel",
+      unique:true
     },
     adminid: {
       type: Schema.Types.ObjectId,
       required: true,
+      unique:true,
       ref: "admin"
     }
     
@@ -20,5 +22,5 @@ const adminAllotted = new Schema(
     timestamps: true,
   }
 );
-module.exports = mongoose.model('adminallotted', adminAllotted)
+module.exports = mongoose.model('adminAllotted', adminAllotted)
 
