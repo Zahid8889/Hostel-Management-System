@@ -230,7 +230,7 @@ const getCurrentadmin = asyncHandler(async(req, res) => {
     .status(200)
     .json(new ApiResponse(
         200,
-        req.admin,
+        {currentAdmin:req.admin},
         "admin fetched successfully"
     ))
 })

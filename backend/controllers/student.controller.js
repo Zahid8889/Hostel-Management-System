@@ -245,7 +245,7 @@ const getCurrentstudent = asyncHandler(async(req, res) => {
     .status(200)
     .json(new ApiResponse(
         200,
-        req.student,
+        {currentStudent:req.student},
         "student fetched successfully"
     ))
     // const {email} = req.body
