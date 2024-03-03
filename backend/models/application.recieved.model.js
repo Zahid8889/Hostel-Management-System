@@ -25,7 +25,7 @@ const recievedApplication = new Schema(
       required: true,
     }
     ,
-    branch:{
+    dept:{
         type:String,
         required:true,
     },

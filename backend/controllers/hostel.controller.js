@@ -3,6 +3,7 @@ const {ApiError} = require("../utils/ApiError.js")
 const Room = require("../models/rooms.model.js")
 const Hostel = require("../models/hostel.model.js")
 const AdminAllotted = require("../models/admin.hostel.model.js")
+const RoomAllotted = require("../models/room.occupied.model.js")
 const { ApiResponse } = require("../utils/ApiResponse.js")
 
 
@@ -83,10 +84,44 @@ const viewrooms = asyncHandler(async(req,res)=>{
  
      res.json(new ApiResponse(200,rooms,"rooms returned"));
 })
+const viewRoomcapacity = asyncHandler(async(req,res)=>{
+    const adminid = req.admin._id
+    const { allottedsession } = req.body;
+    // Step 1: Find the hostelId allotted to the admin from AdminAllotted db using admin id
+    const adminAllotted = await AdminAllotted.findOne({ adminid });
+    if (!adminAllotted) {
+        throw new ApiError(400, "Hostel not allotted to this admin");
+    }
 
+    const { hostelid } = adminAllotted;
+
+    // Step 2: Find and return the hostel from hostel db using hostelId
+    const hostel = await Hostel.findById(hostelid);
+    if (!hostel) {
+        // throw new ApiError(400, "Hostel not found");
+        res.json(new ApiResponse(200,{isallotted : false},"No hostel allotted"));
+    }
+    const rooms = await Room.find({ hostelid });
+
+    // Step 3: Find all the students in each room using room allotted schema
+    const roomCapacities = [];
+    for (const room of rooms) {
+        const studentsInRoom = await RoomAllotted.find({ roomid: room._id, allottedsession });
+        const occupiedCapacity = studentsInRoom.length;
+        const remainingCapacity = room.capacity - occupiedCapacity;
+        roomCapacities.push({
+            roomNumber: room.roomNumber,
+            totalCapacity: room.capacity,
+            occupiedCapacity,
+            remainingCapacity
+        });
+    }
+    res.json(new ApiResponse(200,roomCapacities,"room details fetched correctly"))
+})
 
 module.exports = {
     createHostel,
     createRoom,
-    viewrooms
+    viewrooms,
+    viewRoomcapacity
 };

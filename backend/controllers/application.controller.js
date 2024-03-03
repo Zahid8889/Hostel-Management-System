@@ -24,10 +24,12 @@ const open_application = asyncHandler(async (req, res) => {
     }
 
     const { hostelid } = adminHostel;
-
+    const hostel = await Hostel.findById(hostelid)
+    if(!hostel) throw new ApiError(400, "Hostel not found");
     // Step 2: Save in open application schema
     const openApplication = new OpenApplication({
         hostelid,
+        hostelno:hostel.hostelno,
         adminid,
         gender,
         dept,
@@ -70,44 +72,39 @@ const fetchApplicationformStudent = asyncHandler(async(req,res)=>{
 
 
 const addRecievedApplication = asyncHandler(async (req, res) => {
-    const { hostelno, regnumber, utrno1, utrno2, dept, dateoftransaction, session } = req.body;
+    const studentid = req.student._id
+
+    const {hostelid,utrno1,utrno2,dept,dateoftransaction,session,allotmentsession} = req.body
 
     // Check if any field is empty
-    if (!hostelno || !regnumber || !utrno1 || !utrno2 || !dept || !dateoftransaction || !session) {
+    if (!utrno1 || !utrno2 || !dept || !dateoftransaction || !session||!allotmentsession) {
         const apiError = new ApiError(400,"All fields must be filled");
         return res.status(apiError.statusCode).json(apiError);
     }
 
     try {
-        // Find hostelid from the hostel model based on hostelno
-        const hostel = await Hostel.findOne({ hostelno });
-        if (!hostel) {
-            throw new ApiError(405,"Hostel not found");
+        const existingTransaction1 = await Transaction.findOne({ utrno: utrno1 });
+        const existingTransaction2 = await Transaction.findOne({ utrno: utrno2 });
+    
+        if (existingTransaction1 || existingTransaction2) {
+            throw new ApiError(400, "Transaction UTR already exists");
         }
-
-        // Find studentid from the student model based on regnumber
-        const student = await Student.findOne({  regnumber });
-        if (!student) {
-            throw new ApiError(403,"Student not found");
-        }
-
-        // Create a new received application entry
-        const newReceivedApplication = new RecievedApplication({
-            hostelid: hostel._id,
-            studentid: student._id,
+    
+        // Save in received application
+        const receivedApplication = new RecievedApplication({
+            hostelid,
+            studentid,
             utrno1,
             utrno2,
             dept,
             dateoftransaction,
             session,
+            allotmentsession
         });
-
-        // Save the new received application to the database
-        await newReceivedApplication.save();
-
-        // Respond with a success message or any other relevant data
-        const response = new ApiResponse(200,{},"Received application created successfully");
-        res.status(201).json(response);
+    
+        await receivedApplication.save();
+    
+        res.json(new ApiResponse(200,{}, "Received application added successfully" ));
     } catch (error) {
         // Handle any errors that may occur during the creation process
         if (error instanceof ApiError) {
@@ -128,23 +125,22 @@ const addRecievedApplication = asyncHandler(async (req, res) => {
     }
 });
 const fetchRecievedApplication = asyncHandler(async (req, res) => {
-    const { hostelno, session } = req.body;
+    const adminid = req.admin._id
+    const { allotmentsession} = req.body;
 
     // Check if hostelno and session are provided
-    if (!hostelno || !session) {
+    if ( !session) {
         const apiError = new ApiError(400,"Hostel number and session must be provided");
         return res.status(apiError.statusCode).json(apiError);
     }
 
     try {
-        // Find hostelid from the hostel model based on hostelno
-        const hostel = await Hostel.findOne({ hostelno });
-        if (!hostel) {
-            throw new ApiError(404,"Hostel not found" );
+        const adminHostel = await AdminHostel.findOne({ adminid });
+        if (!adminHostel) {
+            throw new ApiError(400, "Hostel not allotted to this admin");
         }
 
-        // Fetch received applications based on hostelid and session
-        const receivedApplications = await RecievedApplication.find({ hostelid: hostel._id, session });
+        const receivedApplications = await RecievedApplication.find({ hostelid:adminHostel.hostelid, allotmentsession });
 
         // Respond with the fetched data using ApiResponse class
         const response = new ApiResponse(200, { receivedApplications }, "Received applications fetched successfully");

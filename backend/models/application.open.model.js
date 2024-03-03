@@ -9,6 +9,9 @@ const openApplication = new Schema(
         required: true,
         ref: "hostel"
     },
+    hostelno: {
+      type: Number,
+  },
     adminid: {
       type: Schema.Types.ObjectId,
       required: true,
