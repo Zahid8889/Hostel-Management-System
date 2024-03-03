@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 
-const {registeradmin,loginadmin,logoutadmin,getCurrentadmin,getstudents} = require("../controllers/admin.controller.js")
+const {registeradmin,loginadmin,logoutadmin,getCurrentadmin,getstudents,gethostel} = require("../controllers/admin.controller.js")
 const {createHostel,createRoom,viewrooms} = require("../controllers/hostel.controller.js")
 const {open_application,fetchRecievedApplication} = require("../controllers/application.controller.js")
 const {verifyJWTadmin} = require("../middlewares/auth.middleware.js");
@@ -22,12 +22,15 @@ router.route("/createhostel").post(verifyJWTadmin,createHostel)
 router.route("/createrooms").post(verifyJWTadmin,createRoom)
 router.route("/viewrooms").post(verifyJWTadmin,viewrooms)
 
+router.route("/gethostel").post(verifyJWTadmin,gethostel)
+
 router.route("/getstudents").post(verifyJWTadmin,getstudents)
 router.route("/adminpage/getstudents").post(verifyJWTadmin,getstudents)
 
 
 
-router.route("/adminpage/openapplication").post(open_application)
+router.route("/adminpage/openapplication").post(verifyJWTadmin,open_application)
+
 router.route("/adminpage/fetchapplication").post(fetchRecievedApplication)
 
 

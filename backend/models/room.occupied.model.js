@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const roomOccupiedSchema = new Schema(
   {
-    hostelno: {
+    hostelid: {
       type:Schema.Types.ObjectId,
       ref: "hostel",
       required:true,
@@ -19,10 +19,20 @@ const roomOccupiedSchema = new Schema(
       required: true
     }
     ,
-    transaction:{
+    allotmentsession:{
+      type:String,
+        required:true,
+    },
+    transactionid:{
       type:Schema.Types.ObjectId,
       ref: "transaction",
       required:true,
+    },
+    applicationid:{
+      type:Schema.Types.ObjectId,
+      ref:"recievedApplication",
+      required:true,
+      unique:true
     }
   },
   {

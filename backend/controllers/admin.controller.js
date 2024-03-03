@@ -2,7 +2,7 @@ const { asyncHandler } = require("../utils/asynchandler.js");
 const {ApiError} = require("../utils/ApiError.js")
 const Admin = require("../models/admin.model.js")
 const RoomsAllotted = require("../models/room.occupied.model.js")
-// const Hostel = require("../models/hostel.model.js")
+const Hostel = require("../models/hostel.model.js")
 const AdminHostel = require("../models/admin.hostel.model.js")
 const { ApiResponse } = require("../utils/ApiResponse.js")
 const jwt  =require("jsonwebtoken")
@@ -55,11 +55,6 @@ const registeradmin = asyncHandler( async (req, res) => {
     if (existedadmin) {
         throw new ApiError(409, "admin with email or name already exists")
     }
-    // //console.log(req.files);
-
-    
-    // //const coverImageLocalPath = req.files?.coverImage[0]?.path;
-
     
    
 
@@ -90,7 +85,7 @@ const loginadmin = asyncHandler(async (req, res) =>{
     //send cookie
 
     const {email, employeeno, password} = req.body
-    console.log(email);
+    // console.log(email);
 
     if (!employeeno && !email) {
         throw new ApiError(400, "name or email is required")
@@ -157,6 +152,7 @@ const logoutadmin = asyncHandler(async(req, res) => {
     .clearCookie("refreshTokenAdmin", options)
     .json(new ApiResponse(200, {}, "admin logged Out"))
 })
+
 const refreshAccessToken = asyncHandler(async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshTokenadmin || req.body.refreshTokenAdmin
 
@@ -234,38 +230,9 @@ const getCurrentadmin = asyncHandler(async(req, res) => {
         "admin fetched successfully"
     ))
 })
-// async function insertAdminAllotted() {
-//     try {
-//         // Find admin id based on email
-//         const admin = await Admin.findOne({ email: "abc@gmail.com" });
-//         if (!admin) {
-//             console.error("Admin not found");
-//             return;
-//         }
 
-//         // Find hostel id based on hostel number
-//         const hostel = await Hostel.findOne({ hostelno: 4 });
-//         if (!hostel) {
-//             console.error("Hostel not found");
-//             return;
-//         }
-
-//         // Insert a document into adminAllotted
-//         const newAdminAllotted = new AdminHostel({
-//             adminid: admin._id,
-//             hostelid: hostel._id,
-//         });
-
-//         await newAdminAllotted.save();
-
-//         console.log("Admin Allotted document inserted successfully");
-//     } catch (error) {
-//         console.error("Error inserting document:", error.message);
-//     }
-// }
 const getstudents = asyncHandler(async(req,res)=>{
     const {email} = req.body;
-    // insertAdminAllotted()
     try {
         // Check if email is provided
         if (!email) {
@@ -304,12 +271,32 @@ const getstudents = asyncHandler(async(req,res)=>{
     }
 })
 
+const gethostel = asyncHandler(async(req,res)=>{
+    const adminid = req.admin._id
+    // Step 1: Find the hostelId allotted to the admin from AdminAllotted db using admin id
+    const adminAllotted = await AdminHostel.findOne({ adminid });
+    if (!adminAllotted) {
+        throw new ApiError(400, "Hostel not allotted to this admin");
+    }
 
+    const { hostelid } = adminAllotted;
+
+    // Step 2: Find and return the hostel from hostel db using hostelId
+    const hostel = await Hostel.findById(hostelid);
+    if (!hostel) {
+        // throw new ApiError(400, "Hostel not found");
+        res.json(new ApiResponse(200,{isallotted : false},"No hostel allotted"));
+    }
+    else
+        res.json(new ApiResponse(200,{isallotted : true, hostel},"returned allotted hostel"));
+})
 module.exports = {
     registeradmin,
     loginadmin,
     logoutadmin,
     refreshAccessToken,
     changeCurrentPassword,
-    getCurrentadmin,getstudents
+    getCurrentadmin,
+    getstudents,
+    gethostel
 }

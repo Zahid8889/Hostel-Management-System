@@ -5,86 +5,66 @@ const OpenApplication = require("../models/application.open.model.js"); // Updat
 const RecievedApplication = require("../models/application.recieved.model.js"); // Updated the model name to be in line with common naming conventions
 const Hostel = require("../models/hostel.model.js"); // Import your hostel model
 const Admin = require("../models/admin.model.js");
+const AdminHostel = require("../models/admin.hostel.model.js");
+const RoomAllotted = require("../models/room.occupied.model.js");
 const Student = require("../models/student.model.js");
 
 const open_application = asyncHandler(async (req, res) => {
-    // Assuming you're receiving data through the request body. Adjust accordingly.
-    const { hostelno, adminemail, dept, session, endDate } = req.body;
-
-    if (!hostelno || !adminemail || !dept || !session || !endDate) {
-        // const apiError = new ApiError(400,"All fields must be filled");
-        // console.log(apiError)
-        throw new ApiError(400,"All fields must be filled");
-        // return res.status(apiError.statusCode).json(apiError);
+    const adminid = req.admin._id
+    const { gender,dept, session,allotmentsession, endDate } = req.body;
+    // Check if any required field is empty
+    if (!gender || !dept || !session || !endDate||!allotmentsession) {
+        throw new ApiError(400, "Missing required parameters");
     }
-    
-    try {
-        const hostel = await Hostel.findOne({ hostelno: hostelno });
-        if (!hostel) {
-            throw new ApiError(404,"Hostel not found");
-            // throw new ApiError("Hostel not found", 404);
-        }
 
-        // Convert admin to adminId
-        const adminUser = await Admin.findOne({ email: adminemail });
-        if (!adminUser) {
-            throw new ApiError("Admin not found", 404);
-        }
-
-        // Create a new open application entry with converted ids
-        const newOpenApplication = new OpenApplication({
-            hostelid: hostel._id,
-            adminid: adminUser._id,
-            dept,
-            session,
-            endDate,
-        });
-
-        // Save the new open application to the database
-        await newOpenApplication.save();
-
-        // Respond with a success message or any other relevant data
-        const response = new ApiResponse(200,newOpenApplication,"Open application created successfully");
-        res.status(201).json(response);
-    } catch (error) {
-        // Handle any errors that may occur during the creation process
-        if (error.name === "ValidationError") {
-            // Validation error handling
-            const validationErrors = Object.values(error.errors).map((e) => e.message);
-            const errorMessage = `Validation Error: ${validationErrors.join(", ")}`;
-            const apiError = new ApiError(400,errorMessage);
-            return res.status(apiError.statusCode).json(apiError);
-        } else {
-            // Generic error handling
-            // const apiError = new ApiError(500,"Internal Server Error");
-            // return res.status(apiError.statusCode).json(apiError);
-            throw new ApiError(500,error.message)
-        }
+    // Step 1: Find the allotted hostel id from adminhostel schema
+    const adminHostel = await AdminHostel.findOne({ adminid });
+    if (!adminHostel) {
+        throw new ApiError(400, "Hostel not allotted to this admin");
     }
+
+    const { hostelid } = adminHostel;
+
+    // Step 2: Save in open application schema
+    const openApplication = new OpenApplication({
+        hostelid,
+        adminid,
+        gender,
+        dept,
+        allotmentsession,
+        session,
+        endDate
+    });
+    await openApplication.save();
+
+    res.json(new ApiResponse(200,openApplication,"Application opened successfully" ));
 });
 
-const fetchApplicationform = asyncHandler(async(req,res)=>{
+// student get the application form
+const fetchApplicationformStudent = asyncHandler(async(req,res)=>{
     const { dept,gender, session } = req.student;
-    console.log(dept,session,req.student)
-    // Check if dept and session are provided
-    if (!dept || !session) {
-        // throw new ApiError(400,"dept and session must be provided");
-        const apiError = new ApiError(400,"dept and session must be provided");
-        return res.status(apiError.statusCode).json(apiError);
+    const allotmentsession = req.body.allotmentsession;
+    const studentid = req.student._id;
+
+    // Check if the student has already applied in recievedapplication schema
+    const existingApplication = await RecievedApplication.findOne({ studentid, allotmentsession });
+    if (existingApplication) {
+        res.json(new ApiResponse(400,{isapplied:true,isallotted:false}, "Student has already applied for this session"));
     }
 
-    try {
-        // Fetch open applications based on dept and session
-        const openApplications = await OpenApplication.find({ dept,gender, session });
-
-        // Respond with the fetched data using ApiResponse class
-        const response = new ApiResponse(200, { openApplications }, "Open applications fetched successfully");
-        res.status(response.statusCode).json(response);
-    } catch (error) {
-        // Handle any errors that may occur during the fetch process
-        const apiError = new ApiError(500,"Internal Server Error")
-        return res.status(apiError.statusCode).json(apiError);
+    // Check if the student has room allotted already in roomallotted using studentid and allotment session
+    const existingRoomAllotment = await RoomAllotted.findOne({ studentid, allotmentsession });
+    if (existingRoomAllotment) {
+        res.json(new ApiResponse(400,{isapplied:false,isallotted:true}, "Student already has room allotted for this session"));
     }
+
+    // Fetch from openapplications using all variables
+    const openApplications = await OpenApplication.find({ dept, gender, session });
+    // if (openApplications.length === 0) {
+    //     throw new ApiError(404, "No open applications found for this session");
+    // }
+
+    res.json(new ApiResponse(200,{ openApplications },"fetched application successfully"));
 })
 
 
@@ -181,5 +161,5 @@ const fetchRecievedApplication = asyncHandler(async (req, res) => {
     }
 });
 module.exports = {
-    open_application,fetchApplicationform,addRecievedApplication,fetchRecievedApplication
+    open_application,fetchApplicationformStudent,addRecievedApplication,fetchRecievedApplication
 };

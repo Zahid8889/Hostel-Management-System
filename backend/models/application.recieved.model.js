@@ -37,6 +37,14 @@ const recievedApplication = new Schema(
         type:String,
         required:true,
     },
+    allotmentsession:{
+      type:String,
+        required:true,
+    },
+    verified:{
+      type:Boolean,
+      default:false
+    }
     
   },
   {

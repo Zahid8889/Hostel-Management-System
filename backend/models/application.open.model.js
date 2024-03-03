@@ -14,12 +14,20 @@ const openApplication = new Schema(
       required: true,
       ref: "admin"
     },
+    gender:{
+      type:String,
+      required:true
+    },
     dept:{
         type:String,
         required:true,
     },
     session:{
         type:String,
+        required:true,
+    },
+    allotmentsession:{
+      type:String,
         required:true,
     },
     endDate:{
