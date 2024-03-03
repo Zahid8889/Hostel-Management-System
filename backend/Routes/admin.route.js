@@ -31,7 +31,7 @@ router.route("/adminpage/getstudents").post(verifyJWTadmin,getstudents)
 
 router.route("/adminpage/openapplication").post(verifyJWTadmin,open_application)
 
-router.route("/adminpage/fetchapplication").post(fetchRecievedApplication)
+router.route("/adminpage/fetchapplication").post(verifyJWTadmin,fetchRecievedApplication)
 
 router.route("/roomdetail").post(verifyJWTadmin,viewRoomcapacity)
 // router.route("/allotadmin").post(asyncHandler(async (req,res)=>{

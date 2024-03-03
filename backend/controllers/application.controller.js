@@ -129,7 +129,7 @@ const fetchRecievedApplication = asyncHandler(async (req, res) => {
     const { allotmentsession} = req.body;
 
     // Check if hostelno and session are provided
-    if ( !session) {
+    if ( !allotmentsession) {
         const apiError = new ApiError(400,"Hostel number and session must be provided");
         return res.status(apiError.statusCode).json(apiError);
     }
