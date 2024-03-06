@@ -48,7 +48,10 @@ export default function StudentPage() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+     
+        
       },
+      credentials: 'include',
       body: JSON.stringify({
         // name: credentials.name,
         // email: credentials.email,
@@ -109,10 +112,12 @@ export default function StudentPage() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include',
       body: JSON.stringify({ email: email }),
     }).then(async (res) => {
       let response = await res.json();
       console.log(response)
+      console.log()
       await setstudentData(response.data.currentStudent);
     });
   };

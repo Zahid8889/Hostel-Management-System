@@ -13,6 +13,7 @@ const open_application = asyncHandler(async (req, res) => {
     const adminid = req.admin._id
     const { gender,dept, session,allotmentsession, endDate } = req.body;
     // Check if any required field is empty
+    // console.log(gender,dept, session,allotmentsession, endDate )
     if (!gender || !dept || !session || !endDate||!allotmentsession) {
         throw new ApiError(400, "Missing required parameters");
     }
@@ -27,6 +28,11 @@ const open_application = asyncHandler(async (req, res) => {
     const hostel = await Hostel.findById(hostelid)
     if(!hostel) throw new ApiError(400, "Hostel not found");
     // Step 2: Save in open application schema
+    const alreadyopened = await OpenApplication.findOne({hostelid,gender,dept, session,allotmentsession})
+    if(alreadyopened){
+        console.log(alreadyopened)
+        throw new ApiError(400,"this application already opened")
+    }
     const openApplication = new OpenApplication({
         hostelid,
         hostelno:hostel.hostelno,
@@ -42,7 +48,21 @@ const open_application = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200,openApplication,"Application opened successfully" ));
 });
 
+const closeapplication = asyncHandler(async(req,res)=>{
+    const applicationid = req.body.applicationid
+    // Find the application by ID and update 'opened' to false
+    const application = await OpenApplication.findByIdAndUpdate(applicationid, { opened: false }, { new: true });
+        
+    if (!application) {
+        throw new ApiError(400 ,"Application not found" );
+    }
+    
+    // If update successful, send the updated application as response
+    res.json(new ApiResponse(200, application ,"application closed successfully"));
+})
+
 // student get the application form
+
 const fetchApplicationformStudent = asyncHandler(async(req,res)=>{
     const { dept,gender, session } = req.student;
     const allotmentsession = req.body.allotmentsession;
@@ -61,7 +81,7 @@ const fetchApplicationformStudent = asyncHandler(async(req,res)=>{
     }
 
     // Fetch from openapplications using all variables
-    const openApplications = await OpenApplication.find({ dept, gender, session });
+    const openApplications = await OpenApplication.findOne({ dept, gender, session,opened:true });
     // if (openApplications.length === 0) {
     //     throw new ApiError(404, "No open applications found for this session");
     // }
@@ -157,5 +177,5 @@ const fetchRecievedApplication = asyncHandler(async (req, res) => {
     }
 });
 module.exports = {
-    open_application,fetchApplicationformStudent,addRecievedApplication,fetchRecievedApplication
+    open_application,fetchApplicationformStudent,addRecievedApplication,fetchRecievedApplication,closeapplication
 };

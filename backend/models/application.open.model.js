@@ -36,6 +36,10 @@ const openApplication = new Schema(
     endDate:{
         type:Date,
         required:true
+    },
+    opened:{
+      type:Boolean,
+      default:true
     }
   },
   {
