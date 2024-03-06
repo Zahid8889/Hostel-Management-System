@@ -40,8 +40,9 @@ const recievedApplication = new Schema(
     allotmentsession:{
       type:String,
         required:true,
-    },
-    verified:{
+    }
+    ,
+    alotted:{
       type:Boolean,
       default:false
     }

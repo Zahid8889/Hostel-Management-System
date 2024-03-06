@@ -4,12 +4,12 @@ const { Schema } = mongoose.Schema;
 
 const transactionAcceptedSchema = new Schema(
   {
-    student:{
+    studentid:{
         type: Schema.Types.ObjectId,
         required: true,
         ref:"student"
     },
-    UTR_no: {
+    utrno: {
         type: String,
         trim:true,
         required: true,
@@ -20,21 +20,15 @@ const transactionAcceptedSchema = new Schema(
         type: Number,
         required:true
     },
-    category:{
-        type:String,
-        trim:true,
-        enum:["hostel","electricity"],
-        required:true
-    },
-    accountno:{
-        type:Number,
-        required: true
-    },
-    accountName:{
-        type:String,
-        trim:true,
-        required:true
-    }
+    // accountno:{
+    //     type:Number,
+    //     required: true
+    // },
+    // accountName:{
+    //     type:String,
+    //     trim:true,
+    //     required:true
+    // }
   },
   {
     timestamps: true,
