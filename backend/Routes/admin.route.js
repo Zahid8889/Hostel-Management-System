@@ -13,8 +13,8 @@ const { asyncHandler } = require("../utils/asynchandler.js");
 
 router.route("/adminreg").post(registeradmin)
 router.route("/adminlogin").post(loginadmin)
-router.route("/adminpage").post(verifyJWTadmin,getCurrentadmin)
-router.route("/adminpage/admindetails").post(verifyJWTadmin,getCurrentadmin)
+router.route("/adminpage").post(verifyJWTadmin, getCurrentadmin)
+router.route("/adminpage/admindetails").post(verifyJWTadmin, getCurrentadmin)
 
 router.route("/adminlogout").post(verifyJWTadmin,logoutadmin)
 router.route("/adminpage/createhostel").post(verifyJWTadmin,createHostel)
@@ -22,17 +22,17 @@ router.route("/adminpage/createhostel").post(verifyJWTadmin,createHostel)
 router.route("/adminpage/createrooms").post(verifyJWTadmin,createRoom)
 router.route("/adminpage/viewrooms").post(verifyJWTadmin,viewrooms)
 
-router.route("/gethostel").post(verifyJWTadmin,gethostel)
+router.route("/gethostel").post(verifyJWTadmin, gethostel)
 
-router.route("/getstudents").post(verifyJWTadmin,getstudents)
-router.route("/adminpage/getstudents").post(verifyJWTadmin,getstudents)
+router.route("/getstudents").post(verifyJWTadmin, getstudents)
+router.route("/adminpage/getstudents").post(verifyJWTadmin, getstudents)
 
 
 
 router.route("/adminpage/openapplication").post(verifyJWTadmin,open_application)
 router.route("/adminpage/closeapplication").post(verifyJWTadmin,closeapplication)
 
-router.route("/adminpage/fetchapplication").post(verifyJWTadmin,fetchRecievedApplication)
+router.route("/adminpage/fetchapplication").post(verifyJWTadmin, fetchRecievedApplication)
 
 router.route("/adminpage/roomdetail").post(verifyJWTadmin,viewRoomcapacity)
 

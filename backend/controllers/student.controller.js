@@ -4,6 +4,7 @@ const Student = require("../models/student.model.js")
 const { ApiResponse } = require("../utils/ApiResponse.js")
 const jwt  =require("jsonwebtoken")
 const mongoose = require("mongoose");
+import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 
 const generateAccessAndRefereshTokens = async(studentId) =>{
@@ -52,16 +53,20 @@ const registerstudent = asyncHandler( async (req, res) => {
     if (existedstudent) {
         throw new ApiError(409, "student with email or name already exists")
     }
-    // //console.log(req.files);
+    // console.log(req.files);
 
     
-    // //const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    const studentImageLocalPath = req.files?.studentImage[0]?.path;
+    if (!studentImageLocalPath) {
+        throw new ApiError(400, "simage file is required")
+    }
 
+    const studentImage = await uploadOnCloudinary(avatarLocalPath)
     
    
 
     const student = await Student.create({
-        name, email, phonumber, password ,regnumber,rollnum,dept,session,fathername,gender,dob
+        name, email, phonumber, password ,regnumber,rollnum,dept,session,fathername,gender,dob,studentImage:studentImage.url
     })
 
     const createdstudent = await Student.findById(student._id).select(

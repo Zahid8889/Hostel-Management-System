@@ -23,7 +23,12 @@ const roomOccupiedSchema = new Schema(
       type:String,
         required:true,
     },
-    transactionid:{
+    utrno1:{
+      type:Schema.Types.ObjectId,
+      ref: "transaction",
+      required:true,
+    },
+    utrno2:{
       type:Schema.Types.ObjectId,
       ref: "transaction",
       required:true,

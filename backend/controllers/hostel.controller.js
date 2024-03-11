@@ -4,6 +4,7 @@ const Room = require("../models/rooms.model.js")
 const Hostel = require("../models/hostel.model.js")
 const AdminAllotted = require("../models/admin.hostel.model.js")
 const RoomAllotted = require("../models/room.occupied.model.js")
+const Transaction = require("../models/transaction.accepted.model.js")
 const { ApiResponse } = require("../utils/ApiResponse.js")
 
 
@@ -119,9 +120,63 @@ const viewRoomcapacity = asyncHandler(async(req,res)=>{
     res.json(new ApiResponse(200,roomCapacities,"room details fetched correctly"))
 })
 
+const allotRoom = asyncHandler(async(req,res)=>{
+    const adminid = req.admin._id
+    // Step 1: Fetch the application from the RecievedApplication schema
+    const application = await RecievedApplication.findById(applicationid);
+    if (!application) {
+        throw new ApiError(404, "Application not found");
+    }
+
+    // Extract required fields from the application
+    const { studentid, hostelid, utrno1, utrno2, dept, dateoftransaction, session, allotmentsession } = application;
+
+    // Check if any of the two transaction utr1 and 2 is not already saved in transaction schema
+    const existingTransaction1 = await Transaction.findOne({ utrno: utrno1 });
+    const existingTransaction2 = await Transaction.findOne({ utrno: utrno2 });
+    if (existingTransaction1 || existingTransaction2) {
+        throw new ApiError(400, "Transaction UTR already exists");
+    }
+
+    // Step 2: Find all the rooms with remaining capacity greater than 0
+    const rooms = await Room.find({ hostelid });
+    const availableRooms = [];
+    for (const room of rooms) {
+        const studentsInRoom = await RoomAllotted.find({ roomid: room._id, allotmentsession });
+        const occupiedCapacity = studentsInRoom.length;
+        const remainingCapacity = room.capacity - occupiedCapacity;
+        if (remainingCapacity > 0) {
+            availableRooms.push({ room, remainingCapacity });
+        }
+    }
+
+    // Step 3: Pick a random room from the availableRooms array
+    if (availableRooms.length === 0) {
+        throw new ApiError(400, "No available rooms to allot");
+    }
+    const randomIndex = Math.floor(Math.random() * availableRooms.length);
+    const { room, remainingCapacity } = availableRooms[randomIndex];
+
+    // Step 4: Allot the room to the student
+    const transaction1 = new Transaction({ utrno: utrno1,studentid,amount:7500 });
+    await transaction1.save();
+    const transaction2 = new Transaction({ utrno: utrno2,studentid,amount:2000 });
+    await transaction2.save();
+
+    const roomAllotted = new RoomAllotted({hostelid, roomid: room._id, studentid,session, allotmentsession,utrno1, utrno2,applicationid });
+    await roomAllotted.save();
+
+    application.allotted = true;
+    await application.save();
+
+    res.json(new ApiResponse(200, { room, remainingCapacity }, "Room allotted successfully"));
+});
+
+
 module.exports = {
     createHostel,
     createRoom,
     viewrooms,
-    viewRoomcapacity
+    viewRoomcapacity,
+    allotRoom
 };
