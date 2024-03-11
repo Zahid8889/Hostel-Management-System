@@ -15,6 +15,10 @@ const Student = new Schema(
       trim: true,
       required: true,
     },
+    studentImage: {
+      type: String, // url
+      // required: true,
+    },
     password: {
       type: String,
       trim: true,
