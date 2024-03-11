@@ -4,7 +4,7 @@ import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './admin.css';
 const AdminDetails = () => {
-    let navigate = useNavigate();
+ 
   const [adminData, setadminData] = useState([]);
 
   const fetchAdmin = async () => {

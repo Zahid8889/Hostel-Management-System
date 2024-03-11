@@ -1,32 +1,52 @@
 import React, { Component } from 'react';
-import { Table } from 'react-bootstrap';
+import { Form,Button } from 'react-bootstrap';
 import { useState,useEffect } from 'react';
 import './studenthostel.css';
-const StudentApplied = () => {
+const StudentApplied = (props) => {
     const [studentData, setstudentData] = useState([]);
+    const [credentials, setCredentials] = useState({allotmentsession:"" });
+    
+  const handleSubmit = async () => {
 
-  const fetchAdmin = async () => {
-    const branch = localStorage.getItem("branch");
-    const session = localStorage.getItem("session");
     await fetch("http://localhost:5000/api/adminpage/fetchapplication", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ branch:branch, session:session }),
+      body: JSON.stringify({ adminid:props.adminid, allotmentsession:credentials.allotmentsession }),
     }).then(async (res) => {
       
       let response = await res.json();
-      console.log(response);
+      console.log(response.data);
     //   await setstudentData(response.data.getstudents);
       // await setstudentData(response[1]);
     });
   };
-  useEffect(() => {
-    fetchAdmin();
-  }, []);
+  const onChange = (event) => {
+    setCredentials({ ...credentials, [event.target.name]: event.target.value });
+  };
+
     return ( <>
-         {studentData.length!==0?(
+
+          <Form className="form" onSubmit={handleSubmit}>
+            <h2>Fetch Student Application</h2>
+            <Form.Group className="input" contorlId="formallotedsession">
+              <Form.Label>Enter Allotment Session</Form.Label>
+              <Form.Control
+                type="string"
+                placeholder="Enter Allotment Session"
+                name="allotmentsession"
+                value={credentials.allotmentsession}
+                onChange={onChange}
+              />
+            </Form.Group>
+            <Button type="submit" variant="secondary">
+          Submit
+        </Button>
+            </Form>
+
+
+         {/* {studentData.length!==0?(
       <Table striped bordered className="table-info">
         <thead className="table-dark">
           <tr>
@@ -66,7 +86,7 @@ const StudentApplied = () => {
       </Table>
       ):<>
         <h2 id="datanotfound">No Data Found</h2>
-      </>}
+      </>} */}
     </> );
 }
  

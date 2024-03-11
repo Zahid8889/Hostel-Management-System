@@ -17,10 +17,10 @@ router.route("/adminpage").post(verifyJWTadmin,getCurrentadmin)
 router.route("/adminpage/admindetails").post(verifyJWTadmin,getCurrentadmin)
 
 router.route("/adminlogout").post(verifyJWTadmin,logoutadmin)
-router.route("/createhostel").post(verifyJWTadmin,createHostel)
+router.route("/adminpage/createhostel").post(verifyJWTadmin,createHostel)
 
-router.route("/createrooms").post(verifyJWTadmin,createRoom)
-router.route("/viewrooms").post(verifyJWTadmin,viewrooms)
+router.route("/adminpage/createrooms").post(verifyJWTadmin,createRoom)
+router.route("/adminpage/viewrooms").post(verifyJWTadmin,viewrooms)
 
 router.route("/gethostel").post(verifyJWTadmin,gethostel)
 
@@ -34,7 +34,7 @@ router.route("/adminpage/closeapplication").post(verifyJWTadmin,closeapplication
 
 router.route("/adminpage/fetchapplication").post(verifyJWTadmin,fetchRecievedApplication)
 
-router.route("/roomdetail").post(verifyJWTadmin,viewRoomcapacity)
+router.route("/adminpage/roomdetail").post(verifyJWTadmin,viewRoomcapacity)
 
 router.route("/allotadmin").post(asyncHandler(async (req,res)=>{
     const {email,hostelno} = req.body
