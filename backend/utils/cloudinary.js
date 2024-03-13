@@ -1,5 +1,6 @@
-import {v2 as cloudinary} from "cloudinary"
-import fs from "fs"
+const {v2} = require("cloudinary")
+const cloudinary=v2;
+const fs = require("fs")
 
 
 cloudinary.config({ 
@@ -28,4 +29,4 @@ const uploadOnCloudinary = async (localFilePath) => {
 
 
 
-export {uploadOnCloudinary}
+module.exports= {uploadOnCloudinary}

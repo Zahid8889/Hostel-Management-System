@@ -4,7 +4,7 @@ const Student = require("../models/student.model.js")
 const { ApiResponse } = require("../utils/ApiResponse.js")
 const jwt  =require("jsonwebtoken")
 const mongoose = require("mongoose");
-import {uploadOnCloudinary} from "../utils/cloudinary.js"
+const {uploadOnCloudinary} = require("../utils/cloudinary.js")
 
 
 const generateAccessAndRefereshTokens = async(studentId) =>{
