@@ -19,6 +19,7 @@ const RegisterStudent = () => {
     mothername: "",
     gender: "",
     dob: "",
+    session:""
   });
 
   const handleSubmit = async (e) => {
@@ -41,6 +42,7 @@ const RegisterStudent = () => {
         mothername: credentials.mothername,
         gender: credentials.gender,
         dob: credentials.dob,
+        session: credentials.session,
       }),
     });
     const json = await response.json();
@@ -142,6 +144,17 @@ const RegisterStudent = () => {
             placeholder="Enter Department"
             name="dept"
             value={credentials.dept}
+            onChange={onChange}
+          />
+        </Form.Group>
+        <Form.Group className="input" controlId="formsession">
+          <Form.Label>Enter Session</Form.Label>
+          <Form.Control
+            className="control"
+            type="text"
+            placeholder="Session"
+            name="session"
+            value={credentials.session}
             onChange={onChange}
           />
         </Form.Group>

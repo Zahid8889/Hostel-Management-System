@@ -58,6 +58,11 @@ const Student = new Schema(
       trim: true, 
       required: true
     },
+    mothername: {
+      type: String,
+      trim: true, 
+      required: true
+    },
     gender: {
       type: String,
       

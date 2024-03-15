@@ -53,13 +53,13 @@ const AdminDetails = () => {
         <td>Department</td>
         <td>{adminData.dept}</td>
       </tr>
-      <tr>
+      {/* <tr>
         <td>4</td>
         <td>Hostel No.</td>
         <td>{adminData.hostelno}</td>
-      </tr>
+      </tr> */}
       <tr>
-        <td>5</td>
+        <td>4</td>
         <td>Phone Number</td>
         <td>{adminData.phonumber}</td>
       </tr>

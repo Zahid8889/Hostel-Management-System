@@ -42,7 +42,7 @@ const CreateRoom = () => {
     <Form className="form" onSubmit={handleSubmit}>
         <h2>Create Rooms</h2>
         <Form.Group className="input" contorlId="formstart">
-          <Form.Label>Enter Hostel Number</Form.Label>
+          <Form.Label>Enter Start Number</Form.Label>
           <Form.Control
             type="string"
             placeholder="Enter Start Room Number"

@@ -3,7 +3,7 @@ const router = express.Router();
 
 
 const {registeradmin,loginadmin,logoutadmin,getCurrentadmin,getstudents,gethostel} = require("../controllers/admin.controller.js")
-const {createHostel,createRoom,viewrooms,viewRoomcapacity} = require("../controllers/hostel.controller.js")
+const {createHostel,createRoom,viewrooms,viewRoomcapacity,allotRoom} = require("../controllers/hostel.controller.js")
 const {open_application,fetchRecievedApplication,closeapplication} = require("../controllers/application.controller.js")
 const {verifyJWTadmin} = require("../middlewares/auth.middleware.js");
 const Admin = require("../models/admin.model.js")
@@ -35,7 +35,7 @@ router.route("/adminpage/closeapplication").post(verifyJWTadmin,closeapplication
 router.route("/adminpage/fetchapplication").post(verifyJWTadmin, fetchRecievedApplication)
 
 router.route("/adminpage/roomdetail").post(verifyJWTadmin,viewRoomcapacity)
-
+router.route("/allotroom").post(verifyJWTadmin,allotRoom)
 router.route("/allotadmin").post(asyncHandler(async (req,res)=>{
     const {email,hostelno} = req.body
     const admin = await Admin.findOne({ email });

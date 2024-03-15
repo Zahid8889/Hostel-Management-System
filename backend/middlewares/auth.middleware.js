@@ -35,19 +35,19 @@ const verifyJWTstudent = asyncHandler(async(req, _, next) => {
     try {
         const token = req.cookies?.accessTokenAdmin || req.header("Authorization")?.replace("Bearer ", "")
         
-        // console.log(token);
         if (!token) {
             throw new ApiError(401, "Unauthorized request")
         }
-    
+        
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-    
+        
         const admin = await Admin.findById(decodedToken?._id).select("-password -refreshToken")
-    
+        
         if (!admin) {
             
             throw new ApiError(401, "Invalid Access Token")
         }
+        // console.log(token,'yes');
     
         req.admin = admin;
         next()

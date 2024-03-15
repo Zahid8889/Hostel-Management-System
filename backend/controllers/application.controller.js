@@ -8,6 +8,7 @@ const Admin = require("../models/admin.model.js");
 const AdminHostel = require("../models/admin.hostel.model.js");
 const RoomAllotted = require("../models/room.occupied.model.js");
 const Student = require("../models/student.model.js");
+const Transaction = require("../models/transaction.accepted.model.js");
 
 const open_application = asyncHandler(async (req, res) => {
     const adminid = req.admin._id
@@ -71,7 +72,7 @@ const fetchApplicationformStudent = asyncHandler(async(req,res)=>{
     // Check if the student has already applied in recievedapplication schema
     const existingApplication = await RecievedApplication.findOne({ studentid, allotmentsession });
     if (existingApplication) {
-        res.json(new ApiResponse(400,{isapplied:true,isallotted:false}, "Student has already applied for this session"));
+        res.json(new ApiResponse(400,{isapplied:true,isallotted:false,existingApplication}, "Student has already applied for this session"));
     }
 
     // Check if the student has room allotted already in roomallotted using studentid and allotment session
@@ -81,18 +82,20 @@ const fetchApplicationformStudent = asyncHandler(async(req,res)=>{
     }
 
     // Fetch from openapplications using all variables
-    const openApplications = await OpenApplication.findOne({ dept, gender, session,opened:true });
+    const openApplications = await OpenApplication.findOne({ dept, gender, session,allotmentsession,opened:true });
     // if (openApplications.length === 0) {
     //     throw new ApiError(404, "No open applications found for this session");
     // }
-
-    res.json(new ApiResponse(200,{ openApplications },"fetched application successfully"));
+    // console.log(openApplications)
+    res.json(new ApiResponse(200,{isapplied:false,isallotted:false, openApplications },"fetched application successfully"));
 })
 
 
 
 const addRecievedApplication = asyncHandler(async (req, res) => {
+    
     const studentid = req.student._id
+    
 
     const {hostelid,utrno1,utrno2,dept,dateoftransaction,session,allotmentsession} = req.body
 
@@ -135,11 +138,12 @@ const addRecievedApplication = asyncHandler(async (req, res) => {
             const errorMessage = `Validation Error: ${validationErrors.join(", ")}`;
             const apiError = new ApiError(404,errorMessage);
             
-            console.log(apiError)
+            // console.log(apiError)
             return res.status(apiError.statusCode).json(apiError);
         } else {
             // Generic error handling
             const apiError = new ApiError(501,error.message+"Internal Server Error");
+            console.log(apiError.message,'yes')
             return res.status(apiError.statusCode).json(apiError);
         }
     }
@@ -164,7 +168,8 @@ const fetchRecievedApplication = asyncHandler(async (req, res) => {
 
         // Respond with the fetched data using ApiResponse class
         const response = new ApiResponse(200, { receivedApplications }, "Received applications fetched successfully");
-        res.status(response.statusCode).json(response);
+        // console.log('done')
+        return res.status(response.statusCode).json(response);
     } catch (error) {
         // Handle any errors that may occur during the fetch process
         if (error instanceof ApiError) {

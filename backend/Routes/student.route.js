@@ -7,20 +7,21 @@ const {fetchApplicationformStudent,addRecievedApplication} = require("../control
 const {verifyJWTstudent} = require("../middlewares/auth.middleware.js");
 const {upload} = require('../middlewares/multer.middleware.js')
 
-router.route("/studentreg").post(upload.fields([
-    {
-        name: "studentImage",
-        maxCount: 1
-    }
-]),registerstudent)
+router.route("/studentreg").post(registerstudent)
+// router.route("/studentreg").post(upload.fields([
+//     {
+//         name: "studentImage",
+//         maxCount: 1
+//     }
+// ]),registerstudent)
 router.route("/studentlogin").post(loginstudent)
 router.route("/studentlogout").post(verifyJWTstudent,logoutstudent)
 
-router.route("/studentpage").post(verifyJWTstudent,getCurrentstudent)
+router.route("/studentpage/studentdetails").post(verifyJWTstudent,getCurrentstudent)
 
-router.route("/getapplication").post(verifyJWTstudent,fetchApplicationformStudent)
+router.route("/studentpage/getapplication").post(verifyJWTstudent,fetchApplicationformStudent)
 
-router.route("/postapplication").post(verifyJWTstudent,addRecievedApplication)
+router.route("/studentpage/postapplication").post(verifyJWTstudent,addRecievedApplication)
 
 
 

@@ -37,7 +37,7 @@ const registerstudent = asyncHandler( async (req, res) => {
     // return res
 
 
-    const {name, email, phonumber, password ,regnumber,rollnum,session,dept,fathername,gender,dob} = req.body
+    const {name, email, phonumber, password ,regnumber,rollnum,session,dept,fathername,gender,dob,mothername} = req.body
     //console.log("email: ", email);
 
     if (
@@ -56,17 +56,17 @@ const registerstudent = asyncHandler( async (req, res) => {
     // console.log(req.files);
 
     
-    const studentImageLocalPath = req.files?.studentImage[0]?.path;
-    if (!studentImageLocalPath) {
-        throw new ApiError(400, "simage file is required")
-    }
+    // const studentImageLocalPath = req.files?.studentImage[0]?.path;
+    // if (!studentImageLocalPath) {
+    //     throw new ApiError(400, "simage file is required")
+    // }
 
-    const studentImage = await uploadOnCloudinary(avatarLocalPath)
+    // const studentImage = await uploadOnCloudinary(avatarLocalPath)
     
    
 
     const student = await Student.create({
-        name, email, phonumber, password ,regnumber,rollnum,dept,session,fathername,gender,dob,studentImage:studentImage.url
+        name, email, phonumber, password ,regnumber,rollnum,dept,session,fathername,gender,dob,mothername
     })
 
     const createdstudent = await Student.findById(student._id).select(

@@ -24,12 +24,12 @@ const roomOccupiedSchema = new Schema(
         required:true,
     },
     utrno1:{
-      type:Schema.Types.ObjectId,
+      type:String,
       ref: "transaction",
       required:true,
     },
     utrno2:{
-      type:Schema.Types.ObjectId,
+      type:String,
       ref: "transaction",
       required:true,
     },

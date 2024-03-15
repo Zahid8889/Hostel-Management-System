@@ -15,6 +15,7 @@ import './admin.css';
 import ViewOneRoom from './ViewOneRoom';
 import Prac from './prac';
 import Bit from './bit';
+import ViewApplications from './ViewApplications';
 const Admin = () => {
   let navigate = useNavigate();
   const [adminData, setadminData] = useState([]);
@@ -67,15 +68,11 @@ const Admin = () => {
     <>
     <div className='admin'> 
     <div className='admin1'>
-        <h2>BIT Sindri</h2>
-        <h3>Hostel  No. {adminData.hostelno}</h3>  
+        {/* <h2>BIT Sindri</h2>
+        <h3>Hostel  No. {adminData.hostelno}</h3>   */}
         <Link className="btn btn-lg  navi" to="/adminpage/admindetails">
               Details
         </Link>
-          
-        
-        
-         
 
     </div>
     <div className='admin2'>
@@ -99,8 +96,8 @@ else{
     <>
     <div className='admin'> 
     <div className='admin1'>
-        <h2>BIT Sindri</h2>
-        <h3>Hostel  No. {adminData.hostelno}</h3>  
+        {/* <h2>BIT Sindri</h2>
+        <h3>Hostel  No. {adminData.hostelno}</h3>   */}
         <Link className="btn btn-lg  navi" to="/adminpage/admindetails">
               Details
         </Link>
@@ -111,9 +108,9 @@ else{
             <Link className="btn btn-lg  navi" to="/adminpage/createrooms">
               Create Rooms
             </Link>
-            <Link className="btn btn-lg  navi" to="/adminpage/viewrooms">
+            {/* <Link className="btn btn-lg  navi" to="/adminpage/viewrooms">
               View Rooms
-            </Link>
+            </Link> */}
             <Link className="btn btn-lg  navi" to="/adminpage/roomdetail">
               View Room Detail
             </Link>
@@ -121,13 +118,22 @@ else{
             <Link className="btn btn-lg navi" to="/adminpage/openapplication">
               Open Application
             </Link>
+            <Link className="btn btn-lg navi" to="/adminpage/openapplication">
+              Close Application
+            </Link>
           {/* </Nav.Link> */}
           <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/fetchapplication">
-              Application
+              View Applications
             </Link>
-            <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/bit">
-              Bit
+            <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/fetchapplication">
+              View Complaints
             </Link>
+            <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/fetchapplication">
+              Send Notice
+            </Link>
+
+
+        
          
 
     </div>
@@ -140,8 +146,9 @@ else{
   <Route path="/createrooms" element={<CreateRoom />} />
   <Route path="/viewrooms" element={<ViewRoom  />} />
   <Route path="/roomdetail" element={<ViewOneRoom  />} />
-
-  <Route path="/fetchapplication" element={<StudentApplied adminid={adminData._id} />} />
+  
+  <Route path="/fetchapplication" element={<StudentApplied/>} />
+  <Route path="/viewapplication" element={<ViewApplications/>} />
   {/* <Route path="" */}
   {/* <Route path="/" */}
   <Route path="/prac" element={<Prac />} />

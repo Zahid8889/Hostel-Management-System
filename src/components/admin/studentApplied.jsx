@@ -2,22 +2,25 @@ import React, { Component } from 'react';
 import { Form,Button } from 'react-bootstrap';
 import { useState,useEffect } from 'react';
 import './studenthostel.css';
+import { useNavigate } from 'react-router-dom';
 const StudentApplied = (props) => {
-    const [studentData, setstudentData] = useState([]);
+   
     const [credentials, setCredentials] = useState({allotmentsession:"" });
-    
-  const handleSubmit = async () => {
-
+    let navigate=useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     await fetch("http://localhost:5000/api/adminpage/fetchapplication", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ adminid:props.adminid, allotmentsession:credentials.allotmentsession }),
-    }).then(async (res) => {
-      
-      let response = await res.json();
-      console.log(response.data);
+      credentials:'include',
+      body: JSON.stringify({ allotmentsession:credentials.allotmentsession }),
+    }).then(async (response) => {
+      console.log("Xy")
+      let json = await response.json();
+      navigate('/adminpage/viewapplication',{state:json});
+   
     //   await setstudentData(response.data.getstudents);
       // await setstudentData(response[1]);
     });
@@ -28,65 +31,23 @@ const StudentApplied = (props) => {
 
     return ( <>
 
-          <Form className="form" onSubmit={handleSubmit}>
+          <Form className="form" >
             <h2>Fetch Student Application</h2>
-            <Form.Group className="input" contorlId="formallotedsession">
+            <Form.Group className="input">
               <Form.Label>Enter Allotment Session</Form.Label>
               <Form.Control
-                type="string"
+                type="text"
                 placeholder="Enter Allotment Session"
                 name="allotmentsession"
                 value={credentials.allotmentsession}
                 onChange={onChange}
               />
             </Form.Group>
-            <Button type="submit" variant="secondary">
+            <Button type="submit" variant="secondary" onClick={handleSubmit}>
           Submit
         </Button>
             </Form>
 
-
-         {/* {studentData.length!==0?(
-      <Table striped bordered className="table-info">
-        <thead className="table-dark">
-          <tr>
-            <th>Registration Number</th>
-            <th>Name</th>
-            <th>Roll no</th>
-            <th>Accept</th>
-            <th>Reject</th>
-          </tr>
-        </thead>
-        <tbody>
-          {studentData.map((student) => (
-            <tr>
-              <td>{student.regnumber}</td>
-              <td>{student.name}</td>
-              <td>{student.rollnum}</td>
-              <td>
-                <button
-                  className="btn btn-success btn-sm"
-                //   onClick={() => handleAccept(student.regnumber)}
-                >
-                  Accept
-                </button>
-              </td>
-              <td>
-                <button
-                  data-value="apply clicked"
-                  className="btn btn-danger btn-sm"
-                //   onClick={() => handleReject(student.regnumber)}
-                >
-                  Reject
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      ):<>
-        <h2 id="datanotfound">No Data Found</h2>
-      </>} */}
     </> );
 }
  

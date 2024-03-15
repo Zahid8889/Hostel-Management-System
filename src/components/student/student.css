@@ -1,10 +1,10 @@
-.admin{
+.student{
     display:grid;
     grid-template-columns: 35% auto;
     color:black;
 
 }
-.admin1{
+.student1{
     background-color:bisque;
     height: 95vh;
     text-align:center;
@@ -19,8 +19,7 @@ button{
     color:black !important;
    width: 25rem;
     border:1px black solid;
-
-    margin:2% 0%;
+    margin:5% 0%;
     
 }
 Table{

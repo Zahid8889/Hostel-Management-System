@@ -5,6 +5,7 @@ const Hostel = require("../models/hostel.model.js")
 const AdminAllotted = require("../models/admin.hostel.model.js")
 const RoomAllotted = require("../models/room.occupied.model.js")
 const Transaction = require("../models/transaction.accepted.model.js")
+const RecievedApplication= require("../models/application.recieved.model.js");
 const { ApiResponse } = require("../utils/ApiResponse.js")
 
 
@@ -123,6 +124,7 @@ const viewRoomcapacity = asyncHandler(async(req,res)=>{
 const allotRoom = asyncHandler(async(req,res)=>{
     const adminid = req.admin._id
     // Step 1: Fetch the application from the RecievedApplication schema
+    const {applicationid} = req.body
     const application = await RecievedApplication.findById(applicationid);
     if (!application) {
         throw new ApiError(404, "Application not found");

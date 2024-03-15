@@ -106,7 +106,7 @@ function NavBar() {
           <Route path="/logstu" element={<LogStudent />} />
           <Route path="/logadm" element={<LogAdmin />} />
           {/* <Route path="/logsupadm" element={<LogSuperAdmin />} /> */}
-          <Route path="/studentpage" element={<StudentPage />} />
+          <Route path="/studentpage/*" element={<StudentPage />} />
           <Route path="/adminpage/*" element={<Admin />} />
         </Routes>
       </div>

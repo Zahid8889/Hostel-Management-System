@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 const OpenApp = () => {
 
-    const [credentials, setCredentials] = useState({gender:"", allotedsession:"", branch:"", session:"", endDate:"" });
+    const [credentials, setCredentials] = useState({gender:"", allotedsession:"", dept:"", session:"", endDate:"" });
 
    
     const handleSubmit = async (e) => {
@@ -19,7 +19,7 @@ const OpenApp = () => {
         body: JSON.stringify({
             gender:credentials.gender,
             allotmentsession:credentials.allotedsession, 
-            dept:credentials.branch, 
+            dept:credentials.dept, 
             session:credentials.session, 
             endDate:credentials.endDate
         }),
@@ -72,9 +72,9 @@ const OpenApp = () => {
           <Form.Label>Enter Branch</Form.Label>
           <Form.Control
             type="string"
-            placeholder="Enter Branch"
-            name="branch"
-            value={credentials.branch}
+            placeholder="Enter Department"
+            name="dept"
+            value={credentials.dept}
             onChange={onChange}
           />
         </Form.Group>
