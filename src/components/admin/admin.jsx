@@ -16,6 +16,7 @@ import ViewOneRoom from './ViewOneRoom';
 import Prac from './prac';
 import Bit from './bit';
 import ViewApplications from './ViewApplications';
+import Complaints from '../student/Complaints';
 const Admin = () => {
   let navigate = useNavigate();
   const [adminData, setadminData] = useState([]);
@@ -125,7 +126,7 @@ else{
           <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/fetchapplication">
               View Applications
             </Link>
-            <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/fetchapplication">
+            <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/complaint">
               View Complaints
             </Link>
             <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/fetchapplication">
@@ -149,6 +150,7 @@ else{
   
   <Route path="/fetchapplication" element={<StudentApplied/>} />
   <Route path="/viewapplication" element={<ViewApplications/>} />
+
   {/* <Route path="" */}
   {/* <Route path="/" */}
   <Route path="/prac" element={<Prac />} />

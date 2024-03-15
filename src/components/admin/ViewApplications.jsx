@@ -45,7 +45,7 @@ const ViewApplications = () => {
 <tbody>
   {location.state.data.receivedApplications.map(student=>
     <tr>
-      <th>{student.studentid}</th>
+      <th>{student.studentid.name}</th>
       <th>{student.utrno1}</th>
       <th>{student.utrno2}</th>
       <th>{student.dept}</th>

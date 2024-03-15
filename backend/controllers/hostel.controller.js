@@ -108,12 +108,13 @@ const viewRoomcapacity = asyncHandler(async(req,res)=>{
     // Step 3: Find all the students in each room using room allotted schema
     const roomCapacities = [];
     for (const room of rooms) {
-        const studentsInRoom = await RoomAllotted.find({ roomid: room._id, allottedsession });
+        const studentsInRoom = await RoomAllotted.find({ roomid: room._id, allottedsession }).populate('studentid');
         const occupiedCapacity = studentsInRoom.length;
         const remainingCapacity = room.capacity - occupiedCapacity;
         roomCapacities.push({
             roomNumber: room.roomNumber,
             totalCapacity: room.capacity,
+            studentsInRoom,
             occupiedCapacity,
             remainingCapacity
         });
@@ -151,27 +152,46 @@ const allotRoom = asyncHandler(async(req,res)=>{
             availableRooms.push({ room, remainingCapacity });
         }
     }
-
     // Step 3: Pick a random room from the availableRooms array
     if (availableRooms.length === 0) {
         throw new ApiError(400, "No available rooms to allot");
     }
     const randomIndex = Math.floor(Math.random() * availableRooms.length);
     const { room, remainingCapacity } = availableRooms[randomIndex];
-
+    
     // Step 4: Allot the room to the student
     const transaction1 = new Transaction({ utrno: utrno1,studentid,amount:7500 });
     await transaction1.save();
     const transaction2 = new Transaction({ utrno: utrno2,studentid,amount:2000 });
     await transaction2.save();
-
+    
+    console.log('here')
     const roomAllotted = new RoomAllotted({hostelid, roomid: room._id, studentid,session, allotmentsession,utrno1, utrno2,applicationid });
     await roomAllotted.save();
-
+    
     application.allotted = true;
     await application.save();
 
+
     res.json(new ApiResponse(200, { room, remainingCapacity }, "Room allotted successfully"));
+});
+const rejectApplication = asyncHandler(async(req,res)=>{
+    const adminid = req.admin._id
+    // Step 1: Fetch the application from the RecievedApplication schema
+    const {applicationid} = req.body
+    const deletedApplication = await RecievedApplication.findByIdAndDelete(applicationid);
+
+    // Step 2: Check if the application exists
+    if (!deletedApplication) {
+        return res.status(404).json(new ApiError(404,  "Application not found" ));
+    }
+
+    
+
+    // Step 4: Respond with success message
+    return res.json(new ApiResponse(200,{}, "Application rejected successfully"));
+
+    
 });
 
 
@@ -180,5 +200,6 @@ module.exports = {
     createRoom,
     viewrooms,
     viewRoomcapacity,
-    allotRoom
+    allotRoom,
+    rejectApplication
 };

@@ -42,7 +42,7 @@ const recievedApplication = new Schema(
         required:true,
     }
     ,
-    alotted:{
+    allotted:{
       type:Boolean,
       default:false
     }
@@ -52,4 +52,6 @@ const recievedApplication = new Schema(
     timestamps: true,
   }
 );
+recievedApplication.index({ studentid: 1, allotmentsession: 1 }, { unique: true });
+
 module.exports = mongoose.model('recievedApplication', recievedApplication)

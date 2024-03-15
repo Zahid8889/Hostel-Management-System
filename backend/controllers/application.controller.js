@@ -164,9 +164,10 @@ const fetchRecievedApplication = asyncHandler(async (req, res) => {
             throw new ApiError(400, "Hostel not allotted to this admin");
         }
 
-        const receivedApplications = await RecievedApplication.find({ hostelid:adminHostel.hostelid, allotmentsession });
+        const receivedApplications = await RecievedApplication.find({ hostelid:adminHostel.hostelid, allotmentsession ,allotted:false}).populate('studentid');
 
         // Respond with the fetched data using ApiResponse class
+        console.log(receivedApplications)
         const response = new ApiResponse(200, { receivedApplications }, "Received applications fetched successfully");
         // console.log('done')
         return res.status(response.statusCode).json(response);

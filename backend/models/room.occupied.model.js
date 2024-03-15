@@ -9,6 +9,11 @@ const roomOccupiedSchema = new Schema(
       ref: "hostel",
       required:true,
     },
+    roomid: {
+      type:Schema.Types.ObjectId,
+      ref: "room",
+      required:true,
+    },
     studentid:{
       type:Schema.Types.ObjectId,
       ref: "student",
