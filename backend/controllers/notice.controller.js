@@ -3,6 +3,7 @@ const {ApiError} = require("../utils/ApiError.js")
 const { ApiResponse } = require("../utils/ApiResponse.js")
 const Notice = require("../models/notice.model.js")
 const AdminAllotted = require("../models/admin.hostel.model.js")
+const RoomAllotted = require("../models/room.occupied.model.js")
 
 const postNotice = asyncHandler(async(req,res)=>{
     const adminid = req.admin._id
@@ -47,10 +48,25 @@ const retrieveNoticeAdmin = asyncHandler(async(req,res)=>{
     }
 })
 const retrieveNoticeStudent = asyncHandler(async(req,res)=>{
-    
+    const studentid = req.student._id
+    const currentYear = new Date().getFullYear();
+    console.log("AA")
+
+    // Calculate the next year
+    const nextYear = currentYear + 1;
+
+    // Format the allotment session
+    const allotmentsession = `${currentYear}-${nextYear}`; 
     try {
+        const roomAllotment = await RoomAllotted.findOne({ studentid: studentid, allotmentsession: allotmentsession });
+        if (!roomAllotment) {
+            return res.json(new ApiResponse(200,[],"Room not allotted in this Session"));
+        }
+
+        // Retrieve the hostel ID
+        const hostelid = roomAllotment.hostelid;
         // Find all notices where adminid matches the provided adminid
-        const notices = await Notice.find({ });
+        const notices = await Notice.find({ hostelid });
 
         res.json(new ApiResponse(200,notices,"Notice fetched Successfully"));
     } catch (error) {

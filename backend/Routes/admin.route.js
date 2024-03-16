@@ -32,9 +32,9 @@ router.route("/allotroom").post(verifyJWTadmin,allotRoom)
 
 
 router.route('/rejectapplication').post(verifyJWTadmin,rejectApplication)
-router.route('/postnotice').post(verifyJWTadmin,postNotice)
-router.route('/retrievenotice').post(verifyJWTadmin,retrieveNoticeAdmin)
-router.route('/retrievecomplaint').post(verifyJWTadmin,retrieveComplaintAdmin)
+router.route('/adminpage/notice/postnotice').post(verifyJWTadmin,postNotice)
+router.route('/adminpage/notice/retrievenotice').post(verifyJWTadmin,retrieveNoticeAdmin)
+router.route('/adminpage/retrievecomplaint').post(verifyJWTadmin,retrieveComplaintAdmin)
 
 
 

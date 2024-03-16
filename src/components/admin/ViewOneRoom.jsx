@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 const ViewOneRoom = (props) => {
     let navigate=useNavigate();
   const [credentials, setCredentials] = useState({allotedsession:"" });
+  const[data,setdata]=useState([]);
   
   
     
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+e.preventDefault();
     const response =  await fetch("http://localhost:5000/api/adminpage/roomdetail", {
       method: "POST",
       headers: {
@@ -23,9 +25,11 @@ const ViewOneRoom = (props) => {
             //save the auth toke to local storage and redirect
             
             // localStorage.setItem("hostelno", json.hostelno);
+            await setdata(json.data);
+            console.log(json.data);
          
-            alert('Application Accepted');
-            navigate("/adminpage/prac")
+            alert('Room Fetched');
+            
           } else {
             console.log("error");
             alert("Enter Valid Credentials");
@@ -37,7 +41,7 @@ const ViewOneRoom = (props) => {
   
     return (  <>
       <Form className="form" onSubmit={handleSubmit}>
-            <h2>Create Hostel</h2>
+            <h2>View Room</h2>
             <Form.Group className="input" contorlId="formallotedsession">
               <Form.Label>Enter Alloted Session</Form.Label>
               <Form.Control
@@ -52,6 +56,38 @@ const ViewOneRoom = (props) => {
           Submit
         </Button>
             </Form>
+
+            <Table striped bordered className="table-success">
+    <thead className="table-dark">
+      <tr>
+        <th>Room Number</th>
+        <th>Students</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      
+      {/* {data.map(room=>(
+        <tr>
+        
+        <td>{room.roomNumber}</td>
+        <td>{room.studentsInRoom}</td>
+      </tr>
+
+
+
+
+      ))
+      } */}
+      {data.map(room => (
+  <tr key={room.roomNumber}> {/* Remember to add a unique key for each item in the list */}
+    <td>{room.roomNumber}</td>
+    {room.studentsInRoom.map(student=>(<td>{student.studentid.name}</td>))}
+  </tr>
+))}
+      
+    </tbody>
+  </Table>
     
     </>);
 }

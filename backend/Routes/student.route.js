@@ -24,10 +24,10 @@ router.route("/studentpage/postapplication").post(verifyJWTstudent,addRecievedAp
 
 
 
-router.route("/getnotice").post(verifyJWTstudent,retrieveNoticeStudent)
-router.route('/postcomplaint').post(verifyJWTstudent,postComplaint)
-router.route('/resolvecomplaint').post(verifyJWTstudent,resolveComplaint)
-router.route('/getcomplaint').post(verifyJWTstudent,retrieveComplaintStudent)
+router.route("/studentpage/getnotice").post(verifyJWTstudent,retrieveNoticeStudent)
+router.route('/studentpage/complaint/postcomplaint').post(verifyJWTstudent,postComplaint)
+router.route('/studentpage/complaint/resolvecomplaint').post(verifyJWTstudent,resolveComplaint)
+router.route('/studentpage/complaint/getcomplaint').post(verifyJWTstudent,retrieveComplaintStudent)
 
 
 module.exports = router;

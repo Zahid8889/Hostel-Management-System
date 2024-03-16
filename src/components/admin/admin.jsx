@@ -17,6 +17,8 @@ import Prac from './prac';
 import Bit from './bit';
 import ViewApplications from './ViewApplications';
 import Complaints from '../student/Complaints';
+import ViewComplaints from './VIewComplaints';
+import Notice from './Notice';
 const Admin = () => {
   let navigate = useNavigate();
   const [adminData, setadminData] = useState([]);
@@ -103,9 +105,9 @@ else{
               Details
         </Link>
           
-          <Link className="btn btn-lg  navi" to="/adminpage/getstudents">
+          {/* <Link className="btn btn-lg  navi" to="/adminpage/getstudents">
               Students
-            </Link>
+            </Link> */}
             <Link className="btn btn-lg  navi" to="/adminpage/createrooms">
               Create Rooms
             </Link>
@@ -126,10 +128,10 @@ else{
           <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/fetchapplication">
               View Applications
             </Link>
-            <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/complaint">
+            <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/retrievecomplaint">
               View Complaints
             </Link>
-            <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/fetchapplication">
+            <Link className="btn btn-lg btn-ouline-dark navi" to="/adminpage/notice">
               Send Notice
             </Link>
 
@@ -147,9 +149,11 @@ else{
   <Route path="/createrooms" element={<CreateRoom />} />
   <Route path="/viewrooms" element={<ViewRoom  />} />
   <Route path="/roomdetail" element={<ViewOneRoom  />} />
+  <Route path="/retrievecomplaint" element={<ViewComplaints  />} />
   
   <Route path="/fetchapplication" element={<StudentApplied/>} />
   <Route path="/viewapplication" element={<ViewApplications/>} />
+  <Route path="/notice/*" element={<Notice/>} />
 
   {/* <Route path="" */}
   {/* <Route path="/" */}

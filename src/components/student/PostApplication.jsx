@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { useState } from 'react';
 import { Form,Button } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 const PostApplication = () => {
     const location=useLocation();
     console.log(location.state.data.openApplications.hostelid);
@@ -9,6 +9,7 @@ const PostApplication = () => {
     const session=location.state.data.openApplications.session;
     const allotmentsession=location.state.data.openApplications.allotmentsession;
     const dept=location.state.data.openApplications.dept;
+    let navigate=useNavigate();
     const [credentials, setCredentials] = useState({
         utrno1:"",
         utrno2:"",
@@ -55,6 +56,7 @@ const PostApplication = () => {
         else
         {
           alert("Successfully applied");
+          navigate('/studentpage')
         
         }
       };

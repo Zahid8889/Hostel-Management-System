@@ -108,7 +108,8 @@ const viewRoomcapacity = asyncHandler(async(req,res)=>{
     // Step 3: Find all the students in each room using room allotted schema
     const roomCapacities = [];
     for (const room of rooms) {
-        const studentsInRoom = await RoomAllotted.find({ roomid: room._id, allottedsession }).populate('studentid');
+        console.log(room._id,allottedsession)
+        const studentsInRoom = await RoomAllotted.find({ roomid: room._id, allotmentsession:allottedsession }).populate('studentid');
         const occupiedCapacity = studentsInRoom.length;
         const remainingCapacity = room.capacity - occupiedCapacity;
         roomCapacities.push({
@@ -119,6 +120,7 @@ const viewRoomcapacity = asyncHandler(async(req,res)=>{
             remainingCapacity
         });
     }
+    console.log(roomCapacities);
     res.json(new ApiResponse(200,roomCapacities,"room details fetched correctly"))
 })
 
@@ -160,6 +162,7 @@ const allotRoom = asyncHandler(async(req,res)=>{
     const { room, remainingCapacity } = availableRooms[randomIndex];
     
     // Step 4: Allot the room to the student
+    console.log(room,0);
     const transaction1 = new Transaction({ utrno: utrno1,studentid,amount:7500 });
     await transaction1.save();
     const transaction2 = new Transaction({ utrno: utrno2,studentid,amount:2000 });
@@ -168,7 +171,7 @@ const allotRoom = asyncHandler(async(req,res)=>{
     console.log('here')
     const roomAllotted = new RoomAllotted({hostelid, roomid: room._id, studentid,session, allotmentsession,utrno1, utrno2,applicationid });
     await roomAllotted.save();
-    
+    console.log(room._id, roomAllotted)
     application.allotted = true;
     await application.save();
 

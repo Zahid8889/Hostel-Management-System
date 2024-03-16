@@ -4,9 +4,9 @@ const { Schema } = mongoose;
 
 const complaintSchema = new Schema(
   {
-    strudentid:{
+    studentid:{
         type:Schema.Types.ObjectId,
-        ref:'admin',
+        ref:'student',
         required:true
     },
     hostelid:{

@@ -19,6 +19,7 @@ const ViewApplications = () => {
       console.log(response)
       if (response.success) {
         console.log("success accepted");
+        window.location.reload();
   
 
       } else {
@@ -52,9 +53,9 @@ const ViewApplications = () => {
       <th><Button type="button" variant="success"  onClick={() => handleAccept(student._id)}>
           Accept
         </Button></th>
-       <th> <Button type="button" variant="danger" className='success' onClick={() => handleAccept(student._id)}>
+       {/* <th> <Button type="button" variant="danger" className='success' onClick={() => handleReject(student._id)}>
           Reject
-        </Button></th>
+        </Button></th> */}
 
 
     </tr>

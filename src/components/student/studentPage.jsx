@@ -10,7 +10,8 @@ import './student.css';
 import GetApplication from "./GetApplications";
 import PostApplication from "./PostApplication";
 import Complaints from "./Complaints";
-
+import Notices from "./Notices";
+import ViewNotices from "./ViewNotices";
 
 export default function StudentPage() {
   
@@ -33,7 +34,7 @@ export default function StudentPage() {
             <Link className="btn btn-lg  navi" to="/studentpage/complaint">
               Submit Complaint
             </Link>
-            <Link className="btn btn-lg  navi" to="/studentpage/getapplication">
+            <Link className="btn btn-lg  navi" to="/studentpage/notice">
               View Notices
             </Link>
            
@@ -48,7 +49,8 @@ export default function StudentPage() {
   <Route path="/studentdetails" element={<StudentDetails />} />
   <Route path="/postapplication" element={<PostApplication />} />
   <Route path="/getapplication" element={<GetApplication />} />
-  <Route path="/complaint" element={<Complaints/>} />
+  <Route path="/complaint/*" element={<Complaints/>} />
+  <Route path="/notice" element={<ViewNotices/>} />
  
 </Routes>
     

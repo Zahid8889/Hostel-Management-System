@@ -49,8 +49,8 @@ const retrieveComplaintAdmin = asyncHandler(async(req,res)=>{
         const hostelid = adminAllotment.hostelid;
 
         // Step 2: Find all complaints using the hostel ID
-        const complaints = await Complaint.find({ hostelid: hostelid ,resolved:false});
-
+        const complaints = await Complaint.find({ hostelid: hostelid ,resolved:false}).populate('studentid');
+        console.log(complaints)
         // Step 3: Respond with the complaints
         res.json(new ApiResponse(200, complaints, "Complaints fetched successfully"));
     } catch (error) {
